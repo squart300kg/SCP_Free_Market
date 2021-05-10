@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/menu01"
+        android:enabled="true"
+        android:icon="@drawable/ic_01_on"
+        android:title="홈"/>
+    <item android:id="@+id/menu02"
+        android:enabled="true"
+        android:icon="@drawable/ic_02_on"
+        android:title="상품등록"/>
+    <item android:id="@+id/menu03"
+        android:enabled="true"
+        android:icon="@drawable/ic_03_on"
+        android:title="상품검색"/>
+    <item android:id="@+id/menu04"
+        android:enabled="true"
+        android:icon="@drawable/ic_04_on"
+        android:title="충전/환급"/>
+    <item android:id="@+id/menu05"
+        android:enabled="true"
+        android:icon="@drawable/ic_05_on"
+        android:title="나의 방"/>
+</menu>

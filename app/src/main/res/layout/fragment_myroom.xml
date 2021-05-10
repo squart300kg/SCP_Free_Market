@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <ImageView
+        android:id="@+id/ivProfile"
+        android:layout_width="54dp"
+        android:layout_height="54dp"
+        tools:src="@color/color_primary"
+        android:layout_marginTop="46dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/txt01"/>
+
+    <TextView
+        android:id="@+id/txt01"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:textColor="#707070"
+        android:text="SCP토큰 :     100,000  원"
+        android:layout_marginStart="13dp"
+        app:layout_constraintTop_toTopOf="@id/ivProfile"
+        app:layout_constraintStart_toEndOf="@id/ivProfile"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+    <TextView
+        android:id="@+id/txt02"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:textColor="#707070"
+        android:text="마일리지 :     283,000  원"
+        android:layout_marginTop="4dp"
+        app:layout_constraintTop_toBottomOf="@id/txt01"
+        app:layout_constraintStart_toStartOf="@id/txt01"
+        />
+
+    <TextView
+        android:id="@+id/btn01"
+        android:layout_width="match_parent"
+        android:layout_height="43dp"
+        android:background="@drawable/myroom_button"
+        android:gravity="center"
+        android:text="주문 내역 보기"
+        android:layout_marginTop="45dp"
+        android:textColor="#707070"
+        android:textSize="15sp"
+        app:layout_constraintTop_toBottomOf="@id/ivProfile"/>
+
+    <TextView
+        android:id="@+id/btn02"
+        android:layout_width="match_parent"
+        android:layout_height="43dp"
+        android:background="@drawable/myroom_button"
+        android:gravity="center"
+        android:text="장바구니"
+        android:textColor="#707070"
+        android:textSize="15sp"
+        app:layout_constraintTop_toBottomOf="@id/btn01"/>
+
+    <TextView
+        android:id="@+id/btn03"
+        android:layout_width="match_parent"
+        android:layout_height="43dp"
+        android:background="@drawable/myroom_button"
+        android:gravity="center"
+        android:text="보안 / 결제수단 관리"
+        android:textColor="#707070"
+        android:textSize="15sp"
+        app:layout_constraintTop_toBottomOf="@id/btn02"/>
+
+    <TextView
+        android:id="@+id/btn04"
+        android:layout_width="match_parent"
+        android:layout_height="43dp"
+        android:background="@drawable/myroom_button"
+        android:gravity="center"
+        android:text="제휴 가맹점 / 상품등록 심사"
+        android:textColor="#707070"
+        android:textSize="15sp"
+        app:layout_constraintTop_toBottomOf="@id/btn03"/>
+
+    <TextView
+        android:id="@+id/btn05"
+        android:layout_width="match_parent"
+        android:layout_height="43dp"
+        android:background="@drawable/myroom_button"
+        android:gravity="center"
+        android:text="설정"
+        android:textColor="#707070"
+        android:textSize="15sp"
+        app:layout_constraintTop_toBottomOf="@id/btn04"/>
+
+    <TextView
+        android:id="@+id/btn06"
+        android:layout_width="match_parent"
+        android:layout_height="43dp"
+        android:background="@drawable/myroom_button"
+        android:gravity="center"
+        android:text="고객센터"
+        android:textColor="#707070"
+        android:textSize="15sp"
+        app:layout_constraintTop_toBottomOf="@id/btn05"/>
+
+    <TextView
+        android:id="@+id/btnLocalAdmin"
+        android:layout_width="match_parent"
+        android:layout_height="43dp"
+        android:background="@drawable/myroom_button"
+        android:gravity="center"
+        android:text="지역관리자"
+        android:textColor="#707070"
+        android:textSize="15sp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintTop_toBottomOf="@id/btn06"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
