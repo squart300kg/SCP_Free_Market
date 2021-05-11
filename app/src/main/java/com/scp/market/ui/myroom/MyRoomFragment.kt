@@ -1,4 +1,4 @@
-package com.scp.market.ui
+package com.scp.market.ui.myroom
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -10,6 +10,7 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
 import com.scp.market.R
 import com.scp.market.databinding.FragmentMyroomBinding
+import com.scp.market.ui.LocalAdminFragment
 
 class MyRoomFragment : Fragment() {
 

@@ -1,4 +1,4 @@
-package com.scp.market.ui
+package com.scp.market.ui.charge
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

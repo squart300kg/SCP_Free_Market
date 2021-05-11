@@ -1,4 +1,4 @@
-package com.scp.market.ui
+package com.scp.market.ui.main
 
 import android.annotation.SuppressLint
 import android.graphics.Paint
@@ -13,8 +13,11 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
+import com.scp.market.Application
 import com.scp.market.R
 import com.scp.market.databinding.FragmentMainBinding
+import com.scp.market.ui.MainActivity
+import com.scp.market.ui.product.ProductFragment
 import com.scp.market.util.dpToPx
 
 class MainFragment : Fragment() {
@@ -45,6 +48,7 @@ class MainFragment : Fragment() {
             }
             false
         })
+        Application.instance?.user = "hello"
     }
 
     private fun setPriceCancelLine() {

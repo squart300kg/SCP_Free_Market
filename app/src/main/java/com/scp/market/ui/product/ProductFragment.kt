@@ -1,4 +1,4 @@
-package com.scp.market.ui
+package com.scp.market.ui.product
 
 import android.annotation.SuppressLint
 import android.graphics.Paint
@@ -16,6 +16,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.scp.market.R
 import com.scp.market.databinding.FragmentProductBinding
+import com.scp.market.ui.search.SearchFragment
 import com.scp.market.util.dpToPx
 
 

@@ -8,6 +8,11 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.kakao.sdk.user.UserApiClient
 import com.scp.market.R
 import com.scp.market.databinding.ActivityMainBinding
+import com.scp.market.ui.charge.ChargeFragment
+import com.scp.market.ui.main.MainFragment
+import com.scp.market.ui.myroom.MyRoomFragment
+import com.scp.market.ui.register.RegisterFragment
+import com.scp.market.ui.search.SearchFragment
 
 class MainActivity : AppCompatActivity() {
 

@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.kakao.sdk.common.KakaoSdk
 import com.kakao.sdk.user.UserApiClient
+import com.scp.market.Application
 import com.scp.market.R
 import com.scp.market.databinding.ActivityLoginBinding
 import java.security.MessageDigest
@@ -40,14 +41,16 @@ class LoginActivity : AppCompatActivity() {
             initKakaoLogin()
         }
 
-        binding.btnPhoneLogin.setOnClickListener {
-            startActivity(Intent(this, SmsAuthActivity::class.java))
+        binding.btnEmailLogin.setOnClickListener {
+            Toast.makeText(this, "이메일 로그인", Toast.LENGTH_LONG).show()
         }
+
+        getHashKey()
 
     }
 
     private fun initKakaoLogin() {
-        KakaoSdk.init(this, "2b0621f17b73cb652e080c089fde5d7e")
+        KakaoSdk.init(this, "5bdefe59ab1fd149066e8f006b54c243")
         // 카카오톡으로 로그인
         UserApiClient.instance.loginWithKakaoTalk(this) { token, error ->
             if (error != null) {
@@ -55,25 +58,14 @@ class LoginActivity : AppCompatActivity() {
             }
             else if (token != null) {
                 Log.i(TAG, "로그인 성공 ${token.accessToken}")
+
+                Application.instance?.user = token.accessToken
+
                 startActivity(Intent(this, MainActivity::class.java))
             }
         }
     }
 
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        super.onActivityResult(requestCode, resultCode, data)
-//
-//        if(requestCode == SMS_AUTH_REQ_CODE) {
-//            data?.let {
-//                it.getStringExtra("result")?.let { result ->
-//                    Toast.makeText(this, result, Toast.LENGTH_SHORT).show()
-//                }
-//                it.getStringExtra("imp_key")?.let { impKey ->
-//                    viewModel.smsAuthPostAccessToken(getString(R.string.imp_key), getString(R.string.imp_secret), impKey)
-//                } ?: Toast.makeText(this, "인증 결과가 누락되었습니다.\n재인증이 필요합니다.", Toast.LENGTH_SHORT).show()
-//            }
-//        }
-//    }
 
     private fun getHashKey() {
         var packageInfo: PackageInfo? = null

@@ -1,22 +1,26 @@
-package com.scp.market.ui
+package com.scp.market.ui.register
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import com.scp.market.Application
 import com.scp.market.R
 import com.scp.market.databinding.FragmentRegisterBinding
+import com.scp.market.model.ProductInfo
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class RegisterFragment : Fragment() {
 
     private lateinit var binding: FragmentRegisterBinding
+    private val registerViewModel: RegisterViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,7 +34,17 @@ class RegisterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.btnRegister.setOnClickListener {
-            (activity as MainActivity).navigationBar.selectedItemId = R.id.menu03
+
+            Log.i("BuildCOnfigLog : ", Application.instance?.user.toString())
+            registerViewModel.registerProduct(
+                ProductInfo(
+                    "categoty",
+                    "productName",
+                    "productDescription",
+                    1000000
+                )
+            )
+
         }
 
         val items = listOf("대분류","자율시장", "지역특산물", "제례용품", "입점상품", "중고/직거래", "부동산/용역")
