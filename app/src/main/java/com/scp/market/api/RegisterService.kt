@@ -7,7 +7,7 @@ import retrofit2.http.GET
 
 interface RegisterService {
 
-    @GET("hello/hello")
+    @GET("shop/products")
     fun registerProduct(@Body productInfo: ProductInfo): Call<Void>
 
 }

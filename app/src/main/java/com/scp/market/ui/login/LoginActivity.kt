@@ -1,4 +1,4 @@
-package com.scp.market.ui
+package com.scp.market.ui.login
 
 import android.content.Intent
 import android.content.pm.PackageInfo
@@ -8,11 +8,15 @@ import android.util.Base64
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import com.kakao.sdk.common.KakaoSdk
 import com.kakao.sdk.user.UserApiClient
 import com.scp.market.Application
 import com.scp.market.R
 import com.scp.market.databinding.ActivityLoginBinding
+import com.scp.market.model.login.request.AccessTokenRequest
+import com.scp.market.state.NetworkState
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 
@@ -20,6 +24,8 @@ import java.security.NoSuchAlgorithmException
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
+
+    private val loginViewModel: LoginViewModel by viewModel()
     val TAG = "LoginActivityLog"
 
     private val SMS_AUTH_REQ_CODE = 100
@@ -47,10 +53,26 @@ class LoginActivity : AppCompatActivity() {
 
         getHashKey()
 
+        configureObservables()
+
+    }
+
+    private fun configureObservables() {
+        loginViewModel.accessTokenNetworkState.observe(this, Observer { networkState ->
+            when (networkState) {
+                NetworkState.RUNNING -> {}
+                NetworkState.SUCCESS -> {
+                    Log.i("액세스토큰 수신 성공", "수신 성콩!")
+                }
+                NetworkState.FAILED -> {
+                    Log.i("액세스토큰 수신 나중에 성공", "나중에 성공할 것임")
+                }
+            }
+        })
     }
 
     private fun initKakaoLogin() {
-        KakaoSdk.init(this, "5bdefe59ab1fd149066e8f006b54c243")
+
         // 카카오톡으로 로그인
         UserApiClient.instance.loginWithKakaoTalk(this) { token, error ->
             if (error != null) {
@@ -59,9 +81,15 @@ class LoginActivity : AppCompatActivity() {
             else if (token != null) {
                 Log.i(TAG, "로그인 성공 ${token.accessToken}")
 
-                Application.instance?.user = token.accessToken
+                loginViewModel.getAccessToken(
+                    AccessTokenRequest(
+                       getString(R.string.imweb_API_Key),
+                        getString(R.string.imweb_Secret_Key)
+                    )
+                )
 
-                startActivity(Intent(this, MainActivity::class.java))
+//                startActivity(Intent(this, MainActivity::class.java))
+
             }
         }
     }

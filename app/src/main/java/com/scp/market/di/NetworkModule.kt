@@ -1,8 +1,11 @@
 package com.scp.market.di
 
 import com.scp.market.Application
+import com.scp.market.BuildConfig
+import com.scp.market.api.LoginService
 import com.scp.market.api.RegisterService
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -25,56 +28,36 @@ import javax.security.cert.CertificateException
 
 val networkModule = module {
 
-    factory {
-        val builder = OkHttpClient.Builder()
-
-        try {
-            // Create a trust manager that does not validate certificate chains
-            val trustAllCerts = arrayOf<TrustManager>(object : X509TrustManager {
-
-                override fun getAcceptedIssuers(): Array<X509Certificate> {
-                    return arrayOf()
-                }
-
-                @Throws(CertificateException::class)
-                override fun checkClientTrusted(chain: Array<X509Certificate>, authType: String) {
-                }
-
-                @Throws(CertificateException::class)
-                override fun checkServerTrusted(chain: Array<X509Certificate>, authType: String) {
+    single {
+        OkHttpClient.Builder()
+            .addInterceptor(HttpLoggingInterceptor().apply {
+                level = if (BuildConfig.DEBUG) {
+                    HttpLoggingInterceptor.Level.BODY
+                } else {
+                    HttpLoggingInterceptor.Level.NONE
                 }
             })
-
-            // Install the all-trusting trust manager
-            val sslContext = SSLContext.getInstance("SSL")
-            sslContext.init(null, trustAllCerts, java.security.SecureRandom())
-
-            // Create an ssl socket factory with our all-trusting manager
-            val sslSocketFactory = sslContext.socketFactory
-
-            builder.sslSocketFactory(sslSocketFactory, trustAllCerts[0] as X509TrustManager)
-            builder.hostnameVerifier(HostnameVerifier { _, _ ->
-                true
-            })
-        } catch (e: Exception) {
-            throw RuntimeException(e)
-        }
-
-        builder.connectTimeout(60, TimeUnit.SECONDS)
-            .readTimeout(60, TimeUnit.SECONDS)
-            .writeTimeout(60, TimeUnit.SECONDS)
-
+            .build()
     }
 
-//    single<Retrofit>("register") {
-//        Retrofit.Builder()
-//            .client(get())
-//            .baseUrl(Application.SERVICE_BASE_URL)
-//            .addConverterFactory(GsonConverterFactory.create())
-//            .addConverterFactory(MoshiConverterFactory.create())
-//            .build()
-//    }
-//
-//    factory { get<Retrofit>("register").create(RegisterService::class.java) }
+    single {
+        Retrofit.Builder()
+            .client(get())
+            .baseUrl(Application.SERVICE_BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(MoshiConverterFactory.create())
+            .build()
+            .create(RegisterService::class.java)
+    }
+
+    single {
+        Retrofit.Builder()
+            .client(get())
+            .baseUrl(Application.SERVICE_BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(MoshiConverterFactory.create())
+            .build()
+            .create(LoginService::class.java)
+    }
 
 }

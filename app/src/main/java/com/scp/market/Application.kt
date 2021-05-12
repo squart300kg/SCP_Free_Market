@@ -2,6 +2,7 @@ package com.scp.market
 
 import android.app.Application
 import android.util.Log
+import com.kakao.sdk.common.KakaoSdk
 import com.scp.market.di.appComponent
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -18,9 +19,16 @@ open class Application: Application() {
 
         configureDi()
 
+        initKakao()
+
         Log.i("ApplicationLog", "onCreate")
 
     }
+
+    private fun initKakao() =
+        KakaoSdk.init(this, "5bdefe59ab1fd149066e8f006b54c243")
+
+
 
     open fun configureDi() {
         Log.i("configureDiLog", "configureDi")

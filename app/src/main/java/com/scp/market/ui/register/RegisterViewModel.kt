@@ -11,7 +11,7 @@ import com.scp.market.state.NetworkState
 import kotlinx.coroutines.launch
 import java.net.SocketTimeoutException
 
-class RegisterViewModel(): BaseViewModel() {
+class RegisterViewModel(private val registerRepository: RegisterRepository): BaseViewModel() {
 
     // FOR DATA
     val testNetworkState = MutableLiveData<NetworkState>()
@@ -19,7 +19,7 @@ class RegisterViewModel(): BaseViewModel() {
     fun registerProduct(productInfo: ProductInfo) {
         ioScope.launch {
             try {
-//                val response = registerRepository.registerProduct(productInfo)
+                val response = registerRepository.registerProduct(productInfo)
 
                 Log.i("결과값 : ", productInfo.category.toString() + ", accessToken : ${Application.instance?.user}")
 

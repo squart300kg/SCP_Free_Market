@@ -48,7 +48,6 @@ class MainFragment : Fragment() {
             }
             false
         })
-        Application.instance?.user = "hello"
     }
 
     private fun setPriceCancelLine() {
