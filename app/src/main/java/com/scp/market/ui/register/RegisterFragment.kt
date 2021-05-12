@@ -15,7 +15,7 @@ import com.scp.market.Application
 import com.scp.market.R
 import com.scp.market.databinding.FragmentRegisterBinding
 import com.scp.market.model.ProductInfo
-import org.koin.android.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class RegisterFragment : Fragment() {
 

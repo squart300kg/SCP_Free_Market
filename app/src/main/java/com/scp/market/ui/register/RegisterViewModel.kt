@@ -11,9 +11,7 @@ import com.scp.market.state.NetworkState
 import kotlinx.coroutines.launch
 import java.net.SocketTimeoutException
 
-class RegisterViewModel(
-        private val registerRepository: RegisterRepository
-): BaseViewModel() {
+class RegisterViewModel(): BaseViewModel() {
 
     // FOR DATA
     val testNetworkState = MutableLiveData<NetworkState>()

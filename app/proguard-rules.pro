@@ -23,3 +23,23 @@
 #kakaotalk settings
 -keep class com.kakao.sdk.**.model.* { <fields>; }
 -keep class * extends com.google.gson.TypeAdapter
+
+## Retain apiService method parameters when optimizing.
+-keepclassmembers,allowshrinking,allowobfuscation interface * {
+    @retrofit2.http.* <methods>;
+}
+
+## Ignore annotation used for build tooling.
+-dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
+
+## Ignore JSR 305 annotations for embedding nullability information.
+-dontwarn javax.annotation.**
+
+## Guarded by a NoClassDefFoundError try/catch and only used when on the classpath.
+-dontwarn kotlin.Unit
+
+## Top-level functions that can only be used by Kotlin.
+-dontwarn retrofit2.-KotlinExtensions
+
+# Model using by retrofit2.
+-keep class com.scp.market.model.** { *; }

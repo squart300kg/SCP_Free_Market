@@ -4,6 +4,9 @@ plugins {
     id 'kotlin-kapt'
 }
 
+repositories {
+    mavenCentral()
+}
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
@@ -52,8 +55,8 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor:4.7.2'
 
     // KOIN 의존주입 프레임워크
-    implementation "org.koin:koin-android:$koin_version"
-    implementation "org.koin:koin-android-viewmodel:$koin_version"
+    implementation "io.insert-koin:koin-android:$koin_version"
+
 
     // 카카오 로그인
     implementation "com.kakao.sdk:v2-user:$kakao_version"

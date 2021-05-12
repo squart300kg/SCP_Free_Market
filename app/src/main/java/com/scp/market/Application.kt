@@ -3,8 +3,9 @@ package com.scp.market
 import android.app.Application
 import android.util.Log
 import com.scp.market.di.appComponent
-import com.scp.market.model.User
-import org.koin.android.ext.android.startKoin
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.core.context.startKoin
 
 open class Application: Application() {
 
@@ -23,7 +24,11 @@ open class Application: Application() {
 
     open fun configureDi() {
         Log.i("configureDiLog", "configureDi")
-        startKoin(this, provideComponent())
+        startKoin {
+            androidContext(this@Application)
+            androidLogger()
+            modules(provideComponent())
+        }
     }
 
     open fun provideComponent() = appComponent

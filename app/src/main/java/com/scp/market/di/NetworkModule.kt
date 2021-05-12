@@ -2,10 +2,8 @@ package com.scp.market.di
 
 import com.scp.market.Application
 import com.scp.market.api.RegisterService
-import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import org.koin.dsl.module.module
-import org.koin.experimental.builder.single
+import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -68,14 +66,15 @@ val networkModule = module {
 
     }
 
-    single(name = "register") {
-        Retrofit.Builder()
-            .client(get())
-            .baseUrl(Application.SERVICE_BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .addConverterFactory(MoshiConverterFactory.create())
-            .build()
-    }
+//    single<Retrofit>("register") {
+//        Retrofit.Builder()
+//            .client(get())
+//            .baseUrl(Application.SERVICE_BASE_URL)
+//            .addConverterFactory(GsonConverterFactory.create())
+//            .addConverterFactory(MoshiConverterFactory.create())
+//            .build()
+//    }
+//
+//    factory { get<Retrofit>("register").create(RegisterService::class.java) }
 
-    factory { get<Retrofit>("register").create(RegisterService::class.java) }
 }
