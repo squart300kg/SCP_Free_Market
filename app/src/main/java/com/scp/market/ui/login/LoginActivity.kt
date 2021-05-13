@@ -76,10 +76,10 @@ class LoginActivity : AppCompatActivity() {
         // 카카오톡으로 로그인
         UserApiClient.instance.loginWithKakaoTalk(this) { token, error ->
             if (error != null) {
-                Log.e(TAG, "로그인 실패", error)
+                Log.e(TAG, "카카오톡 로그인 실패", error)
             }
             else if (token != null) {
-                Log.i(TAG, "로그인 성공 ${token.accessToken}")
+                Log.i(TAG, "카카오톡 로그인 성공 ${token.accessToken}")
 
                 loginViewModel.getAccessToken(
                     AccessTokenRequest(

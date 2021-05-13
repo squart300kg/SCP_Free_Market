@@ -10,13 +10,6 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
-import java.security.cert.X509Certificate
-import java.util.concurrent.TimeUnit
-import javax.net.ssl.HostnameVerifier
-import javax.net.ssl.SSLContext
-import javax.net.ssl.TrustManager
-import javax.net.ssl.X509TrustManager
-import javax.security.cert.CertificateException
 
 /**
  * module - koin 모듈을 정의할 떄 사용
@@ -28,7 +21,10 @@ import javax.security.cert.CertificateException
 
 val networkModule = module {
 
-    single {
+    // TODO 1. single패턴을 factory패턴으로 바꿀 것
+    //  2. qualifier을 지정할 것,
+
+    factory {
         OkHttpClient.Builder()
             .addInterceptor(HttpLoggingInterceptor().apply {
                 level = if (BuildConfig.DEBUG) {
@@ -37,6 +33,7 @@ val networkModule = module {
                     HttpLoggingInterceptor.Level.NONE
                 }
             })
+//            .addInterceptor(AddCookiesInterceptor())
             .build()
     }
 
@@ -47,17 +44,9 @@ val networkModule = module {
             .addConverterFactory(GsonConverterFactory.create())
             .addConverterFactory(MoshiConverterFactory.create())
             .build()
-            .create(RegisterService::class.java)
     }
 
-    single {
-        Retrofit.Builder()
-            .client(get())
-            .baseUrl(Application.SERVICE_BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .addConverterFactory(MoshiConverterFactory.create())
-            .build()
-            .create(LoginService::class.java)
-    }
+    factory { get<Retrofit>().create(RegisterService::class.java) }
+    factory { get<Retrofit>().create(LoginService::class.java) }
 
 }

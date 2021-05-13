@@ -56,6 +56,7 @@ dependencies {
 
     // KOIN 의존주입 프레임워크
     implementation "io.insert-koin:koin-android:$koin_version"
+    testCompile "io.insert-koin:koin-test-junit4:$koin_version"
 
 
     // 카카오 로그인
