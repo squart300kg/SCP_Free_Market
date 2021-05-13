@@ -1,19 +1,26 @@
 package com.scp.market.network
 
+import android.util.Log
+import com.securepreferences.SecurePreferences
 import okhttp3.Interceptor
 import okhttp3.Response
 
-class AddCookiesInterceptor(): Interceptor {
+class AddCookiesInterceptor(private val securePreferences: SecurePreferences): Interceptor {
+
+    val TAG = "AddCookiesInterceptor"
+
     override fun intercept(chain: Interceptor.Chain): Response {
         var request = chain.request()
         val builder = request.newBuilder()
 
-        // TODO 액세스토큰을 가지고 있다면, 헤더에 다음 두 가지를 추가해 준다.
-        // 1. 액세스 토큰
-        // 2. 가맹점 식별 번호
+        val token = securePreferences.getEncryptedString("token", "")
+
+        if (token != null && token.isNotEmpty()) {
+            builder.addHeader("access-token", token)
+        }
+
         builder.addHeader("Content-Type", "application/json")
-        builder.addHeader("access-token", "abc")
-        builder.addHeader("ACCESS-AFFILIATE", "abc")
+        builder.addHeader("Accept", "application/json")
 
         request = builder.build()
 

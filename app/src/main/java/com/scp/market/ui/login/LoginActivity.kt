@@ -16,6 +16,7 @@ import com.scp.market.R
 import com.scp.market.databinding.ActivityLoginBinding
 import com.scp.market.model.login.request.AccessTokenRequest
 import com.scp.market.state.NetworkState
+import com.scp.market.ui.MainActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
@@ -63,6 +64,8 @@ class LoginActivity : AppCompatActivity() {
                 NetworkState.RUNNING -> {}
                 NetworkState.SUCCESS -> {
                     Log.i("액세스토큰 수신 성공", "수신 성콩!")
+
+                    startActivity(Intent(this, MainActivity::class.java))
                 }
                 NetworkState.FAILED -> {
                     Log.i("액세스토큰 수신 나중에 성공", "나중에 성공할 것임")
@@ -88,7 +91,6 @@ class LoginActivity : AppCompatActivity() {
                     )
                 )
 
-//                startActivity(Intent(this, MainActivity::class.java))
 
             }
         }

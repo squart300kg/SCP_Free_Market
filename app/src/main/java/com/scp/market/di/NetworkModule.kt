@@ -3,7 +3,9 @@ package com.scp.market.di
 import com.scp.market.Application
 import com.scp.market.BuildConfig
 import com.scp.market.api.LoginService
-import com.scp.market.api.RegisterService
+import com.scp.market.api.ProductService
+import com.scp.market.network.AddCookiesInterceptor
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.dsl.module
@@ -24,6 +26,10 @@ val networkModule = module {
     // TODO 1. single패턴을 factory패턴으로 바꿀 것
     //  2. qualifier을 지정할 것,
 
+    factory<Interceptor> {
+        AddCookiesInterceptor(get())
+    }
+
     factory {
         OkHttpClient.Builder()
             .addInterceptor(HttpLoggingInterceptor().apply {
@@ -33,7 +39,7 @@ val networkModule = module {
                     HttpLoggingInterceptor.Level.NONE
                 }
             })
-//            .addInterceptor(AddCookiesInterceptor())
+            .addInterceptor(get() as Interceptor)
             .build()
     }
 
@@ -46,7 +52,7 @@ val networkModule = module {
             .build()
     }
 
-    factory { get<Retrofit>().create(RegisterService::class.java) }
+    factory { get<Retrofit>().create(ProductService::class.java) }
     factory { get<Retrofit>().create(LoginService::class.java) }
 
 }

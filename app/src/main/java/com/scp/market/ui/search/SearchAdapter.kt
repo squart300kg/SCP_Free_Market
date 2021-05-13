@@ -2,6 +2,7 @@ package com.scp.market.ui.search
 
 import android.annotation.SuppressLint
 import android.graphics.Paint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,28 +15,26 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.scp.market.R
-import com.scp.market.data.Search
+import com.scp.market.model.product.response.Product
 import com.scp.market.ui.product.ProductFragment
 import com.scp.market.util.dpToPx
 
 
-class SearchAdapter(val fm: FragmentManager): RecyclerView.Adapter<SearchAdapter.ViewHolder>() {
+class SearchAdapter(val fm: FragmentManager): RecyclerView.Adapter<SearchAdapter.SearchViewHolder>() {
 
-    private var data: List<Search> = listOf()
+    private var data: ArrayList<Product> = ArrayList()
 
     init {
-        data = listOf(
-            Search("귤로장생 GAP 인증 당도선별 카라향...", "117,000원", "137,000원", R.drawable.image_apple),
-            Search("귤로장생 GAP 인증 당도선별 카라향...", "117,000원", "137,000원", R.drawable.image_orange),
-            Search("귤로장생 GAP 인증 당도선별 카라향...", "117,000원", "137,000원", R.drawable.image_pizza),
-            Search("귤로장생 GAP 인증 당도선별 카라향...", "117,000원", "137,000원", R.drawable.image_apple),
-            Search("귤로장생 GAP 인증 당도선별 카라향...", "117,000원", "137,000원", R.drawable.image_pizza)
-        )
-        notifyDataSetChanged()
+//        data.add(Search("귤로장생 GAP 인증 당도선별 카라향...", "117,000원", "137,000원", R.drawable.image_apple))
+//        data.add(Search("귤로장생 GAP 인증 당도선별 카라향...", "117,000원", "137,000원", R.drawable.image_orange))
+//        data.add(Search("귤로장생 GAP 인증 당도선별 카라향...", "117,000원", "137,000원", R.drawable.image_pizza))
+//        data.add(Search("귤로장생 GAP 인증 당도선별 카라향...", "117,000원", "137,000원", R.drawable.image_apple))
+//        data.add(Search("귤로장생 GAP 인증 당도선별 카라향...", "117,000원", "137,000원", R.drawable.image_pizza))
+//        notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder
-            = ViewHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchViewHolder
+            = SearchViewHolder(
         LayoutInflater.from(parent.context).inflate(
             R.layout.item_search,
             parent,
@@ -43,13 +42,37 @@ class SearchAdapter(val fm: FragmentManager): RecyclerView.Adapter<SearchAdapter
         )
     )
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: SearchViewHolder, position: Int) =
         holder.bind(data[position])
-    }
+
 
     override fun getItemCount(): Int = data.size
 
-    inner class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
+    fun addAll(list: List<Product>?) {
+        Log.i("어댑터 : ", list.toString())
+        if (list != null) {
+            Log.i("어댑터 0.5 : ", list.toString() + "사이즈 : ")
+            if (data.size > 0) {
+
+                Log.i("어댑터1 : ", list.toString())
+                if (data[0].name != list[0].name) {
+
+                    Log.i("어댑터2 : ", list.toString())
+                    data = ArrayList()
+                    data.addAll(list)
+                    notifyDataSetChanged()
+                }
+            } else {
+
+                Log.i("어댑터3 : ", list.toString())
+                data.addAll(list)
+                notifyDataSetChanged()
+
+            }
+        }
+    }
+
+    inner class SearchViewHolder(view: View): RecyclerView.ViewHolder(view) {
 
         private val txtTitle: TextView = view.findViewById(R.id.txtTitle)
         private val txtPrice: TextView = view.findViewById(R.id.txtPrice)
@@ -57,15 +80,15 @@ class SearchAdapter(val fm: FragmentManager): RecyclerView.Adapter<SearchAdapter
         private val ivImage: ImageView = view.findViewById(R.id.ivImage)
 
         @SuppressLint("SetTextI18n")
-        fun bind(item: Search) {
-            txtTitle.text = item.title
-            txtPrice.text = item.price
-            txtCancelPrice.text = item.cancelPrice
+        fun bind(item: Product) {
+            txtTitle.text = item.name
+            txtPrice.text = item.price.toString()
+            txtCancelPrice.text = item.price.toString()
             txtCancelPrice.paintFlags = txtCancelPrice.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
 
             val requestOptions = RequestOptions().transforms(RoundedCorners(6.dpToPx()), CenterCrop())
 
-            Glide.with(itemView).applyDefaultRequestOptions(requestOptions).load(item.image).into(ivImage)
+            Glide.with(itemView).applyDefaultRequestOptions(requestOptions).load("https://cdn.imweb.me/thumbnail/20201005/6ed074329cb25.jpg").into(ivImage)
 
             itemView.setOnClickListener {
                 fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
