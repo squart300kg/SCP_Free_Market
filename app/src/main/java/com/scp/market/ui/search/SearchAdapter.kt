@@ -14,10 +14,12 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
+import com.scp.market.BuildConfig
 import com.scp.market.R
 import com.scp.market.model.product.response.Product
 import com.scp.market.ui.product.ProductFragment
 import com.scp.market.util.dpToPx
+import java.text.DecimalFormat
 
 
 class SearchAdapter(val fm: FragmentManager): RecyclerView.Adapter<SearchAdapter.SearchViewHolder>() {
@@ -82,13 +84,17 @@ class SearchAdapter(val fm: FragmentManager): RecyclerView.Adapter<SearchAdapter
         @SuppressLint("SetTextI18n")
         fun bind(item: Product) {
             txtTitle.text = item.name
-            txtPrice.text = item.price.toString()
-            txtCancelPrice.text = item.price.toString()
+            txtPrice.text = "${DecimalFormat("###,###").format(item.price)}원"
+            txtCancelPrice.text = "${DecimalFormat("###,###").format(item.price)}원"
             txtCancelPrice.paintFlags = txtCancelPrice.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
 
             val requestOptions = RequestOptions().transforms(RoundedCorners(6.dpToPx()), CenterCrop())
 
-            Glide.with(itemView).applyDefaultRequestOptions(requestOptions).load("https://cdn.imweb.me/thumbnail/20201005/6ed074329cb25.jpg").into(ivImage)
+            // 썸네일 생성 규칙
+            // 도메인/upload/{data.list.image_url}
+            Glide.with(itemView)
+                    .applyDefaultRequestOptions(requestOptions)
+                    .load("${ BuildConfig.DOMAIN }/upload/${item.imageUrl?.get("${item.images?.get(0)}")}").into(ivImage)
 
             itemView.setOnClickListener {
                 fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)

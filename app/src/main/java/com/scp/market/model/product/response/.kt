@@ -20,7 +20,7 @@ data class Product(
     val editTime: Int?,
     val etc: Etc?,
     @SerializedName("image_url")
-    val imageUrl: ImageUrl?,
+    val imageUrl: HashMap<String, String>?,
     val images: List<String>?,
     val maker: String?,
     val name: String?,

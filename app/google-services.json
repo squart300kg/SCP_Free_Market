@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1083085094907",
+    "project_id": "scp-free-market",
+    "storage_bucket": "scp-free-market.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1083085094907:android:80f1bc59fbab1cb3b1155e",
+        "android_client_info": {
+          "package_name": "com.scp.market"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1083085094907-ljo09ijhv0l83ogi0e9o9nrv0tsdrpkp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.scp.market",
+            "certificate_hash": "4b884febba9e2e9c4ea4574ebd29e37836896b07"
+          }
+        },
+        {
+          "client_id": "1083085094907-ge520bqua3hqsi4iqivdoah72htsbbbc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAjfmblyinDAvaHr56KDWmr_aLva6dNH4g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1083085094907-ge520bqua3hqsi4iqivdoah72htsbbbc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

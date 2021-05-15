@@ -36,20 +36,18 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-//        val list = listOf(binding.btnKakaoLogin, binding.btnPhoneLogin, binding.btnKakaoSignUp, binding.btnPhoneSignUp)
-//        for (item in list) {
-//            item.setOnClickListener {
-//                Intent(this, MainActivity::class.java)
-//                    .run { startActivity(this) }
-//                finish()
-//            }
-//        }
         binding.btnKakaoLogin.setOnClickListener {
             initKakaoLogin()
         }
 
         binding.btnEmailLogin.setOnClickListener {
-            Toast.makeText(this, "이메일 로그인", Toast.LENGTH_LONG).show()
+            loginViewModel.getAccessToken(
+                    AccessTokenRequest(
+                            getString(R.string.imweb_API_Key),
+                            getString(R.string.imweb_Secret_Key)
+                    )
+            )
+
         }
 
         getHashKey()
