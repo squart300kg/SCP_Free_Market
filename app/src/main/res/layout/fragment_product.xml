@@ -146,11 +146,23 @@
                 app:layout_constraintTop_toBottomOf="@id/txtFreeDelivery" />
 
             <ImageView
+                android:id="@+id/contentImage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:src="@drawable/image_coupang"
                 android:layout_marginTop="10dp"
+                android:visibility="visible"
                 app:layout_constraintTop_toBottomOf="@id/txtDeliveryInfo"/>
+            <TextView
+                android:id="@+id/contentText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="신타6입니"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                app:layout_constraintTop_toBottomOf="@id/txtDeliveryInfo"
+                android:visibility="gone"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

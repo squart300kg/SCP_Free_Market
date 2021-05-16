@@ -28,6 +28,7 @@ data class Product(
     val origin: String?,
     val point: Point?,
     val price: Int?,
+    val price_org: Int?,
     @SerializedName("price_none")
     val priceNone: Boolean?,
     @SerializedName("price_tax")

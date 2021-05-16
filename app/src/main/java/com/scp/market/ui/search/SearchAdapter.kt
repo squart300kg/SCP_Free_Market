@@ -1,7 +1,9 @@
 package com.scp.market.ui.search
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.graphics.Paint
+import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -22,7 +24,10 @@ import com.scp.market.util.dpToPx
 import java.text.DecimalFormat
 
 
-class SearchAdapter(val fm: FragmentManager): RecyclerView.Adapter<SearchAdapter.SearchViewHolder>() {
+class SearchAdapter(
+        val activity: Activity,
+        val fm: FragmentManager
+        ): RecyclerView.Adapter<SearchAdapter.SearchViewHolder>() {
 
     private var data: ArrayList<Product> = ArrayList()
 
@@ -51,22 +56,20 @@ class SearchAdapter(val fm: FragmentManager): RecyclerView.Adapter<SearchAdapter
     override fun getItemCount(): Int = data.size
 
     fun addAll(list: List<Product>?) {
-        Log.i("어댑터 : ", list.toString())
+
         if (list != null) {
-            Log.i("어댑터 0.5 : ", list.toString() + "사이즈 : ")
+
             if (data.size > 0) {
 
-                Log.i("어댑터1 : ", list.toString())
+
                 if (data[0].name != list[0].name) {
 
-                    Log.i("어댑터2 : ", list.toString())
                     data = ArrayList()
                     data.addAll(list)
                     notifyDataSetChanged()
                 }
             } else {
 
-                Log.i("어댑터3 : ", list.toString())
                 data.addAll(list)
                 notifyDataSetChanged()
 
@@ -85,7 +88,13 @@ class SearchAdapter(val fm: FragmentManager): RecyclerView.Adapter<SearchAdapter
         fun bind(item: Product) {
             txtTitle.text = item.name
             txtPrice.text = "${DecimalFormat("###,###").format(item.price)}원"
-            txtCancelPrice.text = "${DecimalFormat("###,###").format(item.price)}원"
+            if (item.price_org == null) {
+                txtCancelPrice.visibility = View.INVISIBLE
+            } else {
+                Log.i("item.price_org", "${item.price_org}")
+                txtCancelPrice.visibility = View.VISIBLE
+                txtCancelPrice.text = "${DecimalFormat("###,###").format(item.price_org)}원"
+            }
             txtCancelPrice.paintFlags = txtCancelPrice.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
 
             val requestOptions = RequestOptions().transforms(RoundedCorners(6.dpToPx()), CenterCrop())
@@ -96,9 +105,26 @@ class SearchAdapter(val fm: FragmentManager): RecyclerView.Adapter<SearchAdapter
                     .applyDefaultRequestOptions(requestOptions)
                     .load("${ BuildConfig.DOMAIN }/upload/${item.imageUrl?.get("${item.images?.get(0)}")}").into(ivImage)
 
+            var name = item.name
+            var price = item.price ?: 0
+            var price_org = item.price_org ?: 0
+            var content = item.content
+
             itemView.setOnClickListener {
-                fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                fm.beginTransaction().replace(R.id.container , ProductFragment()).addToBackStack(null).commitAllowingStateLoss()
+
+//                fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                fm.beginTransaction().replace(
+                        R.id.container ,
+                        ProductFragment().apply {
+                            arguments = Bundle().apply {
+                                putString("name", name)
+                                putInt("price", price)
+                                putInt("price_org", price_org)
+                                putString("image_url", "${ BuildConfig.DOMAIN }/upload/${item.imageUrl?.get("${item.images?.get(0)}")}")
+                                putString("content", content)
+                            }
+                        })
+                        .addToBackStack(null).commitAllowingStateLoss()
             }
         }
     }
