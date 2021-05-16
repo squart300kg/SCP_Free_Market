@@ -64,6 +64,7 @@ class LoginActivity : AppCompatActivity() {
                     Log.i("액세스토큰 수신 성공", "수신 성콩!")
 
                     startActivity(Intent(this, MainActivity::class.java))
+                    finish()
                 }
                 NetworkState.FAILED -> {
                     Log.i("액세스토큰 수신 나중에 성공", "나중에 성공할 것임")

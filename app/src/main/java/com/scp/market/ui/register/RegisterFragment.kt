@@ -7,8 +7,10 @@ import android.content.Intent
 import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
@@ -37,6 +39,7 @@ import com.scp.market.ui.custom.CameraGalleryBottomDialog.Companion.PICK_FROM_CA
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 import java.io.FileNotFoundException
+import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -80,6 +83,7 @@ class RegisterFragment : Fragment() {
             // 3. 전송 버튼을 클릭 후, 파이어스토어에 이미지 업로드가 시작되었을 때, 다이얼로그를 띄워준다.
             createProgressBar()
 
+            Log.i("imageURLLIst : ", imageURIList.toString())
             uploadImageToFireStore(category_name.toString(), getRealPathFromURI(imageURIList))
 
         }
@@ -203,7 +207,13 @@ class RegisterFragment : Fragment() {
             when (requestCode) {
                 PICK_FROM_CAMERA -> {
                     // TODO 카메라를 통한 이미지 처리 해결할 것
-                    Log.i("갔다옴", "1")
+                    Log.i("갔다옴", "url : ${data?.data}")
+
+//                    binding.btnRegisterImage.setImageBitmap(cameraGalleryBottomDialog?.setImage())
+                    binding.btnRegisterImage.setImageBitmap(activity?.let { resizeBitmap(it, cameraGalleryBottomDialog?.getImageUri()!!, 200) })
+                    imageURIList.add(cameraGalleryBottomDialog?.getImageUri()!!)
+                    bitmapToFile(activity?.let { resizeBitmap(it, cameraGalleryBottomDialog?.getImageUri()!!, 200) }!!)
+                    binding.imageCount.text = "선택된 사진 : 1장"
                 }
 
                 ACTION_REQUEST_GALLERY -> {
@@ -246,10 +256,50 @@ class RegisterFragment : Fragment() {
 
                 }
 
-                ACTION_REQUEST_IMAGE_CROP -> {}
+                ACTION_REQUEST_IMAGE_CROP -> {
+                    Log.i("갔다옴", "5")}
             }
         }
 
+    }
+
+    private fun bitmapToFile(bitmap: Bitmap) {
+        var fileOutputStream: FileOutputStream? = null
+        var bitmapFile: File? = null
+
+        try {
+            val file = File(Environment.getExternalStoragePublicDirectory(resources.getString(R.string.app_name)), "")
+            if (!file.exists()) {
+                file.mkdir()
+            }
+
+            // TODO 카메라, 앨범으로 저장장소 접근시 대응 필요
+
+            bitmapFile = File(file, "IMG_" + SimpleDateFormat("yyyyMMddHHmmss", Locale.ROOT).format(Calendar.getInstance().time) + ".jpg")
+            fileOutputStream = FileOutputStream(bitmapFile)
+            val resizeBitmap = Bitmap.createScaledBitmap(bitmap, 200, 200, true)
+            resizeBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream)
+            MediaScannerConnection.scanFile(activity, arrayOf(bitmapFile.absolutePath), null, object : MediaScannerConnection.MediaScannerConnectionClient {
+                override fun onMediaScannerConnected() {
+
+                }
+
+                override fun onScanCompleted(path: String?, uri: Uri?) {
+                    Toast.makeText(activity, "file saved", Toast.LENGTH_LONG).show()
+                }
+            })
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            if (fileOutputStream != null) {
+                try {
+                    fileOutputStream.flush()
+                    fileOutputStream.close()
+                } catch (e: Exception) {
+                }
+
+            }
+        }
     }
 
     private fun resizeBitmap(activity: Activity, uri: Uri, resize: Int): Bitmap? {

@@ -33,7 +33,7 @@ class MainFragment : Fragment() {
 
     private lateinit var binding: FragmentMainBinding
     private val searchViewModel: SearchViewModel by viewModel()
-    private var productList: List<Product>? = null
+    private var prodList: List<Product>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,18 +75,41 @@ class MainFragment : Fragment() {
 
         val list = listOf(binding.bestItem01, binding.bestItem02, binding.bestItem03)
         for (item in list) {
+            var index = 0
             item.setOnClickListener {
-//                (activity as MainActivity).navigationBar.selectedItemId = R.id.menu03
-//                fragmentManager!!.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-//                fragmentManager!!.beginTransaction().replace(R.id.container, ProductFragment()).commitAllowingStateLoss()
+
+                index = if (item == binding.bestItem01) 0 else if (item == binding.bestItem02) 1 else 2
+                (activity as MainActivity).navigationBar.selectedItemId = R.id.menu03
+                fragmentManager!!.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                fragmentManager!!.beginTransaction().replace(
+                        R.id.container,
+                        ProductFragment().apply {
+                            arguments = Bundle().apply {
+
+                                var name = prodList?.get(index)?.name
+                                var price = if (prodList?.get(index)?.price == null) 0 else prodList?.get(index)?.price
+                                var price_org = if (prodList?.get(index)?.price_org == null) 0 else prodList?.get(index)?.price_org
+                                var image_url = "${ BuildConfig.DOMAIN }/upload/${prodList?.get(index)?.imageUrl?.get("${prodList!!.get(index).images?.get(0)}")}"
+                                var content = prodList?.get(index)?.content
+
+                                putString("name", name)
+                                putInt("price", price!!)
+                                putInt("price_org", price_org!!)
+                                putString("image_url", image_url)
+                                putString("content", content)
+                                Log.i("MainFragmentLog", "name : $name\nprice : $price")
+
+                            }
+                        }).commitAllowingStateLoss()
             }
+            index++
         }
 
-        val requestOptions = RequestOptions().transforms(RoundedCorners(6.dpToPx()), CenterCrop())
-
-        Glide.with(this).applyDefaultRequestOptions(requestOptions).load(R.drawable.image_apple).into(binding.ivItem01)
-        Glide.with(this).applyDefaultRequestOptions(requestOptions).load(R.drawable.image_orange).into(binding.ivItem02)
-        Glide.with(this).applyDefaultRequestOptions(requestOptions).load(R.drawable.image_pizza).into(binding.ivItem03)
+//        val requestOptions = RequestOptions().transforms(RoundedCorners(6.dpToPx()), CenterCrop())
+//
+//        Glide.with(this).applyDefaultRequestOptions(requestOptions).load(R.drawable.image_apple).into(binding.ivItem01)
+//        Glide.with(this).applyDefaultRequestOptions(requestOptions).load(R.drawable.image_orange).into(binding.ivItem02)
+//        Glide.with(this).applyDefaultRequestOptions(requestOptions).load(R.drawable.image_pizza).into(binding.ivItem03)
     }
 
     private fun configureObservables() {
@@ -110,6 +133,8 @@ class MainFragment : Fragment() {
     }
 
     private fun initMainProduct(productList: List<Product>?) {
+
+        prodList = productList
 
         val requestOptions = RequestOptions().transforms(RoundedCorners(6.dpToPx()), CenterCrop())
         Glide.with(this).applyDefaultRequestOptions(requestOptions).load("${ BuildConfig.DOMAIN }/upload/${productList?.get(0)?.imageUrl?.get("${productList?.get(0).images?.get(0)}")}").into(binding.ivItem01)

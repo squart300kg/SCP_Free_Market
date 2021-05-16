@@ -4,6 +4,8 @@ import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.database.Cursor
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -35,6 +37,8 @@ class CameraGalleryBottomDialog(
 ) : BottomSheetDialogFragment(), View.OnClickListener  {
 
     private var cameraImageFile: File? = null
+    private var imageUri: Uri? = null
+
     private val galleryPermissionListener = object : PermissionListener {
 
 
@@ -96,6 +100,7 @@ class CameraGalleryBottomDialog(
 
         try {
             cameraImageFile = createImageFile()
+            Log.i("imageFileLog", cameraImageFile.toString())
         } catch (e: IOException) {
             Toast.makeText(activity, "이미지 처리 오류! 다시 시도해주세요.", Toast.LENGTH_SHORT).show()
             e.printStackTrace()
@@ -109,7 +114,9 @@ class CameraGalleryBottomDialog(
                                 "${BuildConfig.APPLICATION_ID}.provider",
                                 cameraImageFile!!
                         )
+                imageUri = photoUri
 
+                Log.i("photoURLLOG", photoUri.toString())
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
 
                 if (ratio == TWO_BY_ONE) {
@@ -123,7 +130,23 @@ class CameraGalleryBottomDialog(
                                 intent,
                                 PICK_FROM_CAMERA
                         )
+
                     }
+                } else {
+                    if(fragment != null) {
+                        fragment.startActivityForResult(
+                                intent,
+                                PICK_FROM_CAMERA
+                        )
+                        Toast.makeText(activity, "사진촬영1", Toast.LENGTH_LONG).show()
+                    } else {
+                        activity.startActivityForResult(
+                                intent,
+                                PICK_FROM_CAMERA
+                        )
+                        Toast.makeText(activity, "사진촬영2", Toast.LENGTH_LONG).show()
+                    }
+                    Toast.makeText(activity, "사진촬영3", Toast.LENGTH_LONG).show()
                 }
             } else {
                 val photoUri = Uri.fromFile(cameraImageFile)
@@ -161,7 +184,6 @@ class CameraGalleryBottomDialog(
         val intent = Intent(Intent.ACTION_GET_CONTENT)
         intent.type = MediaStore.Images.Media.CONTENT_TYPE
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-//        intent.data = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
 
         if (ratio == TWO_BY_ONE) {
             if(fragment != null) {
@@ -261,4 +283,11 @@ class CameraGalleryBottomDialog(
         return null
 
     }
+
+    fun setImage(): Bitmap
+            = BitmapFactory.decodeFile(cameraImageFile?.absolutePath)
+
+    fun getImageUri(): Uri
+            = imageUri!!
+
 }

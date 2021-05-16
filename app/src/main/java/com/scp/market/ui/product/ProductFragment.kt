@@ -61,7 +61,7 @@ class ProductFragment : Fragment() {
             binding.txtCancelPrice.visibility = View.INVISIBLE
             binding.txtSale.visibility = View.INVISIBLE
         } else {
-            binding.txtSale.text = "${calculatePercentage(price?.toLong(), price_org?.toLong())} (${DecimalFormat("###,###").format(price_org!! - price!!)}}) 즉시할인가"
+            binding.txtSale.text = "${calculatePercentage(price?.toLong(), price_org?.toLong())} (${DecimalFormat("###,###").format(price_org!! - price!!)}) 즉시할인가"
             binding.txtCancelPrice.text = "${DecimalFormat("###,###").format(price_org)}원"
         }
 
