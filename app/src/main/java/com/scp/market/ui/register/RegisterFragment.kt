@@ -18,6 +18,7 @@ import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -28,6 +29,7 @@ import com.scp.market.databinding.FragmentRegisterBinding
 import com.scp.market.model.Category
 import com.scp.market.model.registerProduct.request.RegisterProductRequest
 import com.scp.market.state.NetworkState
+import com.scp.market.ui.MainActivity
 import com.scp.market.ui.custom.CameraGalleryBottomDialog
 import com.scp.market.ui.custom.CameraGalleryBottomDialog.Companion.ACTION_REQUEST_GALLERY
 import com.scp.market.ui.custom.CameraGalleryBottomDialog.Companion.ACTION_REQUEST_IMAGE_CROP
@@ -55,8 +57,6 @@ class RegisterFragment : Fragment() {
     private val imageURIList = arrayListOf<Uri>()
     private val imageDownloadURLList = arrayListOf<String>()
 
-//    private var categoryItem: ArrayList? = null
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -77,8 +77,9 @@ class RegisterFragment : Fragment() {
             // 상품 업로드 순서
             // 1. 이미지를 Firebase의 Storage에 올린다. 그 후, URL을 반환 받는다.
             // 2. 반환받은 URL을 사용하여 imwebAPI를 사용하여 상품을 업로드 한다.
+            // 3. 전송 버튼을 클릭 후, 파이어스토어에 이미지 업로드가 시작되었을 때, 다이얼로그를 띄워준다.
+            createProgressBar()
 
-//            Log.i("전송 전", getRealPathFromURI(imageURIList[0]).toString())
             uploadImageToFireStore(category_name.toString(), getRealPathFromURI(imageURIList))
 
         }
@@ -90,6 +91,7 @@ class RegisterFragment : Fragment() {
                     "cameraGalleryDialog"
             )
         }
+
 
     }
 
@@ -136,7 +138,6 @@ class RegisterFragment : Fragment() {
         var downloadImageURLResponseIndex = 0
         while ( roopIndex < fileURIList?.size!!) {
 
-            Log.i("indexLog1 : ", "index : $roopIndex")
             var fileURI = fileURIList[roopIndex]
 
             var file = Uri.fromFile(File(fileURI))
@@ -145,14 +146,20 @@ class RegisterFragment : Fragment() {
             val imagesRef = storageRef.child("${category}/${timeStamp}_${file.lastPathSegment}")
 
             val uploadTask = imagesRef.putFile(file)
+            uploadTask.addOnFailureListener {
 
-            val urlTask = uploadTask.continueWithTask { task ->
+                Toast.makeText(activity, "이미지를 서버에 업로드하는데 실패했습니다.", Toast.LENGTH_LONG).show()
+                dismissProgressBar()
+
+            }
+
+            uploadTask.continueWithTask { task ->
                 if (!task.isSuccessful) {
                     task.exception?.let {
                         throw it
                     }
                 }
-                Log.i("indexLog2 : ", "index : $roopIndex")
+
                 imagesRef.downloadUrl
             }.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
@@ -160,13 +167,10 @@ class RegisterFragment : Fragment() {
                     Log.i("downLoadUri결과값 : ", downloadUri.toString())
                     imageDownloadURLList.add(downloadUri.toString())
 
-                    // 이미지 URL을 모두 받으면 imweb API에 상품을 등록해준다.
-                    Log.i("상풍삽입1, ", "상품삽입 index : $roopIndex, fileSize : ${fileURIList.size}")
-                    // 모든 이미지의 URL을 받았으면 이제 상품을 등록해준다.
-
                     downloadImageURLResponseIndex++
                     if (downloadImageURLResponseIndex == fileURIList.size) {
                         Log.i("상풍삽입2, ", "상품삽입 index : $roopIndex, fileSize : ${fileURIList.size}")
+
                         registerViewModel.registerProduct(
                                 RegisterProductRequest(
                                         listOf(category_code), // 상품 카테고리
@@ -240,25 +244,9 @@ class RegisterFragment : Fragment() {
                         }
                     }
 
-
-
-
-
-//                    val fileUri = cameraGalleryBottomDialog?.startCrop(data)
-//                    val options = BitmapFactory.Options()
-//                    val originalBm =
-//                        BitmapFactory.decodeFile(fileUri, options)
-//
-//                    Log.i("갔다옴", "contentUri : ${data?.data}\nfileUri : ${fileUri}")
-//
-//                    binding.btnRegisterImage.setImageBitmap(originalBm)
-
-
                 }
 
-                ACTION_REQUEST_IMAGE_CROP -> {
-                    Log.i("갔다옴", "3")
-                }
+                ACTION_REQUEST_IMAGE_CROP -> {}
             }
         }
 
@@ -300,9 +288,16 @@ class RegisterFragment : Fragment() {
                 NetworkState.SUCCESS -> {
 
                     Toast.makeText(activity, "상품 등록을 완료하였습니다!", Toast.LENGTH_LONG).show()
+                    dismissProgressBar()
+                    (activity as MainActivity).navigationBar.selectedItemId = R.id.menu01
 
                 }
-                NetworkState.FAILED -> {}
+                NetworkState.FAILED -> {
+
+                    Toast.makeText(activity, "상품 등록에 실패하였씁니다.", Toast.LENGTH_LONG).show()
+                    dismissProgressBar()
+
+                }
             }
         })
         registerViewModel.categoryNetWorkState.observe(this, Observer { networkState ->
@@ -350,5 +345,24 @@ class RegisterFragment : Fragment() {
         }
 
     }
+
+    private fun createProgressBar() {
+        binding.rootView.setBackgroundResource(R.color.very_light_gray)
+        binding.progressBar.visibility = View.VISIBLE
+        activity?.window?.setFlags(
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+        )
+    }
+
+    private fun dismissProgressBar() {
+        binding.rootView.setBackgroundResource(R.color.white)
+        binding.progressBar.visibility = View.GONE
+        activity?.window?.clearFlags(
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+        )
+    }
+
+
 
 }
