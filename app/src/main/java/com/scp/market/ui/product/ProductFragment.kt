@@ -82,18 +82,20 @@ class ProductFragment : Fragment() {
             binding.contentText.visibility = View.VISIBLE
             binding.contentText.text = content
         }
-        binding.edtSearch.setOnTouchListener(OnTouchListener { _, event ->
-            val right = 2
-            if (event.action == MotionEvent.ACTION_UP) {
-                if (event.rawX >= binding.edtSearch.right - binding.edtSearch.compoundDrawables[right].bounds.width()
-                ) {
-                    fragmentManager!!.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                    fragmentManager!!.beginTransaction().replace(R.id.container , SearchFragment()).addToBackStack(null).commitAllowingStateLoss()
-                    return@OnTouchListener true
-                }
-            }
-            false
-        })
+
+        // TODO 검색 기능
+//        binding.edtSearch.setOnTouchListener(OnTouchListener { _, event ->
+//            val right = 2
+//            if (event.action == MotionEvent.ACTION_UP) {
+//                if (event.rawX >= binding.edtSearch.right - binding.edtSearch.compoundDrawables[right].bounds.width()
+//                ) {
+//                    fragmentManager!!.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+//                    fragmentManager!!.beginTransaction().replace(R.id.container , SearchFragment()).addToBackStack(null).commitAllowingStateLoss()
+//                    return@OnTouchListener true
+//                }
+//            }
+//            false
+//        })
 
         // TODO fragmentManager Deprecated대응!!
 

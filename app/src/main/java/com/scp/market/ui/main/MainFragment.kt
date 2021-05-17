@@ -80,8 +80,8 @@ class MainFragment : Fragment() {
 
                 index = if (item == binding.bestItem01) 0 else if (item == binding.bestItem02) 1 else 2
                 (activity as MainActivity).navigationBar.selectedItemId = R.id.menu03
-                fragmentManager!!.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                fragmentManager!!.beginTransaction().replace(
+                (activity as MainActivity).supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                (activity as MainActivity).supportFragmentManager.beginTransaction().replace(
                         R.id.container,
                         ProductFragment().apply {
                             arguments = Bundle().apply {

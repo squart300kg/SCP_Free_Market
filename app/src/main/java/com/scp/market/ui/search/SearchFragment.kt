@@ -52,7 +52,7 @@ class SearchFragment : Fragment() {
 
     private fun initRecyclerView() {
 
-        searchAdapter = SearchAdapter(requireActivity(), fragmentManager!!)
+        searchAdapter = SearchAdapter(requireActivity(), activity?.supportFragmentManager!!)
 
         binding.rvSearch.apply {
             setHasFixedSize(true)
