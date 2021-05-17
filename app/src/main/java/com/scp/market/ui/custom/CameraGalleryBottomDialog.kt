@@ -217,13 +217,12 @@ class CameraGalleryBottomDialog(
      */
     @Throws(IOException::class)
     private fun createImageFile(): File? {
-        // 이미지 파일 이름 ( sauce_{시간}_ )
+        // 이미지 파일 이름 ( scp_{시간}_ )
         val timeStamp = SimpleDateFormat("HHmmss", Locale.ROOT).format(Date())
         val imageFileName = "scp" + timeStamp + "_"
 
         // 이미지가 저장될 폴더 이름 ( scp )
         val storageDir = File(Environment.getExternalStorageDirectory().toString() + "/scp/")
-        Log.i("파일저장소", Environment.getExternalStorageDirectory().toString() + "/scp/")
         if (!storageDir.exists()) {
             storageDir.mkdirs()
         }
@@ -287,7 +286,14 @@ class CameraGalleryBottomDialog(
     fun setImage(): Bitmap
             = BitmapFactory.decodeFile(cameraImageFile?.absolutePath)
 
-    fun getImageUri(): Uri
-            = imageUri!!
+    fun getImageUri(bitmapImageFile: File): Uri
+            = FileProvider.getUriForFile(
+                    activity,
+                    "${BuildConfig.APPLICATION_ID}.provider",
+                    bitmapImageFile!!
+            )
+
+    fun getImageTempUri() =
+             imageUri!!
 
 }

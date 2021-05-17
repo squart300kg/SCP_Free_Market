@@ -2,6 +2,7 @@ package com.scp.market.ui.register
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.ContentUris
 import android.content.Context
 import android.content.Intent
 import android.database.Cursor
@@ -12,6 +13,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.provider.OpenableColumns
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -20,8 +22,8 @@ import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.google.firebase.ktx.Firebase
@@ -99,6 +101,43 @@ class RegisterFragment : Fragment() {
 
     }
 
+    private fun getFilePathForN(uri: Uri, context: Context): String? {
+        val returnCursor = context.contentResolver.query(uri, null, null, null, null)
+        /*
+     * Get the column indexes of the data in the Cursor,
+     *     * move to the first row in the Cursor, get the data,
+     *     * and display it.
+     * */
+        val nameIndex = returnCursor!!.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+        val sizeIndex = returnCursor.getColumnIndex(OpenableColumns.SIZE)
+        returnCursor.moveToFirst()
+        val name = returnCursor.getString(nameIndex)
+        val size = java.lang.Long.toString(returnCursor.getLong(sizeIndex))
+        val file = File(context.filesDir, name)
+        try {
+            val inputStream = context.contentResolver.openInputStream(uri)
+            val outputStream = FileOutputStream(file)
+            var read = 0
+            val maxBufferSize = 1 * 1024 * 1024
+            val bytesAvailable = inputStream!!.available()
+
+            //int bufferSize = 1024;
+            val bufferSize = Math.min(bytesAvailable, maxBufferSize)
+            val buffers = ByteArray(bufferSize)
+            while (inputStream.read(buffers).also { read = it } != -1) {
+                outputStream.write(buffers, 0, read)
+            }
+            Log.e("File Size", "Size " + file.length())
+            inputStream.close()
+            outputStream.close()
+            Log.e("File Path", "Path " + file.path)
+            Log.e("File Size", "Size " + file.length())
+        } catch (e: java.lang.Exception) {
+            Log.e("Exception", e.message!!)
+        }
+        return file.path
+    }
+
     private fun getRealPathFromURI(contentURIList: List<Uri>): List<String>? {
 
         // TODO deprecated된 요소 변경할 것
@@ -115,10 +154,13 @@ class RegisterFragment : Fragment() {
 
             if (columnIndex != null) {
                 fileUri = cursor?.getString(columnIndex)
+                Log.i("getRealPathFromURI", fileUri.toString())
                 if (fileUri == null) {
                     Toast.makeText(activity, "유효하지 않은 이미지가 선택되었습니다.", Toast.LENGTH_SHORT).show()
                     return null
                 }
+            } else {
+                Log.i("columIndex is numm", "null")
             }
             fileUriList.add(fileUri.toString())
         }
@@ -126,6 +168,8 @@ class RegisterFragment : Fragment() {
         Log.i("getRealPathFromURI", fileUriList.toString())
         return fileUriList
     }
+
+
 
     private fun uploadImageToFireStore(category: String, fileURIList: List<String>?) {
 
@@ -137,14 +181,16 @@ class RegisterFragment : Fragment() {
 
         // Create a storage reference from our app
         val storageRef = storage.reference
-
+        Log.i("fileURI1", fileURIList.toString())
         var roopIndex = 0
         var downloadImageURLResponseIndex = 0
         while ( roopIndex < fileURIList?.size!!) {
 
             var fileURI = fileURIList[roopIndex]
 
+            Log.i("fileURI1", fileURI)
             var file = Uri.fromFile(File(fileURI))
+            Log.i("fileURI1", file.toString())
             // Create a reference to 'images/mountains.jpg'
             val timeStamp = SimpleDateFormat("HHmmss", Locale.ROOT).format(Date())
             val imagesRef = storageRef.child("${category}/${timeStamp}_${file.lastPathSegment}")
@@ -206,13 +252,16 @@ class RegisterFragment : Fragment() {
             Log.i("갔다옴", "0")
             when (requestCode) {
                 PICK_FROM_CAMERA -> {
-                    // TODO 카메라를 통한 이미지 처리 해결할 것
-                    Log.i("갔다옴", "url : ${data?.data}")
+                    // TODO 카메라를 통한 이미지 처리 해결할 것 & 리팩토링 필요
 
-//                    binding.btnRegisterImage.setImageBitmap(cameraGalleryBottomDialog?.setImage())
-                    binding.btnRegisterImage.setImageBitmap(activity?.let { resizeBitmap(it, cameraGalleryBottomDialog?.getImageUri()!!, 200) })
-                    imageURIList.add(cameraGalleryBottomDialog?.getImageUri()!!)
-                    bitmapToFile(activity?.let { resizeBitmap(it, cameraGalleryBottomDialog?.getImageUri()!!, 200) }!!)
+                    var bitmap = resizeBitmap(requireNotNull(activity), cameraGalleryBottomDialog?.getImageTempUri()!!, 200)
+                    binding.btnRegisterImage.setImageBitmap(bitmap)
+
+//                    imageURIList.add(cameraGalleryBottomDialog?.getImageUri()!!)
+                    var bitmapFile = bitmapToFile(activity?.let { resizeBitmap(it, cameraGalleryBottomDialog?.getImageTempUri()!!, 200) }!!)
+                    Log.i("bitmapFileUrl_F", bitmapFile?.toUri().toString())
+                    Log.i("bitmapFileUrl_C", getFilePathForN(cameraGalleryBottomDialog!!.getImageUri(bitmapFile!!), requireActivity())!!.toUri().toString())
+                    imageURIList.add(getFilePathForN(cameraGalleryBottomDialog!!.getImageUri(bitmapFile!!), requireActivity())!!.toUri())
                     binding.imageCount.text = "선택된 사진 : 1장"
                 }
 
@@ -263,19 +312,43 @@ class RegisterFragment : Fragment() {
 
     }
 
-    private fun bitmapToFile(bitmap: Bitmap) {
+    private fun getImageContentUri(fileName: File, context: Context): Uri {
+        var fileUri = Uri.parse( fileName.toString() )
+        var filePath = fileUri.path
+        Log.i("filePath : ", filePath.toString())
+        var cursor = context.contentResolver.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+        null, "_data = '" + filePath + "'", null, null)
+
+        cursor?.moveToNext()
+
+        var id = cursor?.getLong(cursor.getColumnIndex("_id"))
+        var uri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, requireNotNull(id))
+
+        return uri
+    }
+
+    private fun bitmapToFile(bitmap: Bitmap): File? {
         var fileOutputStream: FileOutputStream? = null
         var bitmapFile: File? = null
 
         try {
-            val file = File(Environment.getExternalStoragePublicDirectory(resources.getString(R.string.app_name)), "")
+
+            val timeStamp = SimpleDateFormat("HHmmss", Locale.ROOT).format(Date())
+            val imageFileName = "scp" + timeStamp + "_"
+
+            val file = File(Environment.getExternalStorageDirectory().toString() + "/scp/")
             if (!file.exists()) {
                 file.mkdir()
             }
 
+            Log.i("bitmapToFilePath1", file.path)
+
             // TODO 카메라, 앨범으로 저장장소 접근시 대응 필요
 
-            bitmapFile = File(file, "IMG_" + SimpleDateFormat("yyyyMMddHHmmss", Locale.ROOT).format(Calendar.getInstance().time) + ".jpg")
+
+            bitmapFile = File(file, "scp" + SimpleDateFormat("HHmmss", Locale.ROOT).format(Date()) + ".jpg")
+            Log.i("bitmapToFilePath2", bitmapFile.path)
+            Log.i("bitmapToFilePath2_abs", bitmapFile.absolutePath)
             fileOutputStream = FileOutputStream(bitmapFile)
             val resizeBitmap = Bitmap.createScaledBitmap(bitmap, 200, 200, true)
             resizeBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream)
@@ -300,6 +373,7 @@ class RegisterFragment : Fragment() {
 
             }
         }
+        return bitmapFile
     }
 
     private fun resizeBitmap(activity: Activity, uri: Uri, resize: Int): Bitmap? {
