@@ -62,6 +62,9 @@ class RegisterFragment : Fragment() {
     private val imageURIList = arrayListOf<Uri>()
     private val imageDownloadURLList = arrayListOf<String>()
 
+    private var isCameraMode = false
+    private var isGalleryMode = false
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -86,7 +89,15 @@ class RegisterFragment : Fragment() {
             createProgressBar()
 
             Log.i("imageURLLIst : ", imageURIList.toString())
-            uploadImageToFireStore(category_name.toString(), getRealPathFromURI(imageURIList))
+            if (isCameraMode) {
+                uploadImageToFireStoreForCamera(category_name.toString(), imageURIList[0].toString())
+            }
+            if (isGalleryMode) {
+
+                uploadImageToFireStoreForGallery(category_name.toString(), getRealPathFromURI(imageURIList))
+
+            }
+
 
         }
         binding.btnRegisterImage.setOnClickListener {
@@ -171,7 +182,7 @@ class RegisterFragment : Fragment() {
 
 
 
-    private fun uploadImageToFireStore(category: String, fileURIList: List<String>?) {
+    private fun uploadImageToFireStoreForGallery(category: String, fileURIList: List<String>?) {
 
         // TODO 안드로이드 10 저장소 관련 대응할 것. 것
         //  매니페스트 android:requestLegacyExternalStorage="true"지울 것
@@ -245,6 +256,69 @@ class RegisterFragment : Fragment() {
 
     }
 
+    private fun uploadImageToFireStoreForCamera(category: String, fileUrl: String) {
+
+        // TODO 안드로이드 10 저장소 관련 대응할 것. 것
+        //  매니페스트 android:requestLegacyExternalStorage="true"지울 것
+
+        val storage = Firebase.storage
+
+        // Create a storage reference from our app
+        val storageRef = storage.reference
+
+
+            var file = Uri.fromFile(File(fileUrl))
+            Log.i("fileURI1", file.toString())
+            // Create a reference to 'images/mountains.jpg'
+            val timeStamp = SimpleDateFormat("HHmmss", Locale.ROOT).format(Date())
+            val imagesRef = storageRef.child("${category}/${timeStamp}_${file.lastPathSegment}")
+
+            val uploadTask = imagesRef.putFile(file)
+            uploadTask.addOnFailureListener {
+
+                Toast.makeText(activity, "이미지를 서버에 업로드하는데 실패했습니다.", Toast.LENGTH_LONG).show()
+                dismissProgressBar()
+
+            }
+
+            uploadTask.continueWithTask { task ->
+                if (!task.isSuccessful) {
+                    task.exception?.let {
+                        throw it
+                    }
+                }
+
+                imagesRef.downloadUrl
+            }.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val downloadUri = task.result
+                    Log.i("downLoadUri결과값 : ", downloadUri.toString())
+                    imageDownloadURLList.add(downloadUri.toString())
+
+                        Log.i("상풍삽입2, ", "상품삽입")
+
+                        registerViewModel.registerProduct(
+                                RegisterProductRequest(
+                                        listOf(category_code), // 상품 카테고리
+                                        imageDownloadURLList, // 상품 썸네일
+                                        binding.edt02.text.toString(), // 상품 이름
+                                        "근육이 무럭무럭 심플콘텐츠 - 하드코딩", // 상품 간단 설명
+                                        binding.edt03.text.toString(), // 상품 상세설명
+                                        binding.edt05.text.toString().toDouble(), // 할인가격
+                                        binding.edt04.text.toString().toDouble(), // 원래가격
+                                        binding.edt09.toString() // 공급지
+                                )
+                        )
+
+                } else {
+                    // Handle failures
+                    // ...
+                }
+            }
+
+
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -260,9 +334,11 @@ class RegisterFragment : Fragment() {
 //                    imageURIList.add(cameraGalleryBottomDialog?.getImageUri()!!)
                     var bitmapFile = bitmapToFile(activity?.let { resizeBitmap(it, cameraGalleryBottomDialog?.getImageTempUri()!!, 200) }!!)
                     Log.i("bitmapFileUrl_F", bitmapFile?.toUri().toString())
-                    Log.i("bitmapFileUrl_C", getFilePathForN(cameraGalleryBottomDialog!!.getImageUri(bitmapFile!!), requireActivity())!!.toUri().toString())
-                    imageURIList.add(getFilePathForN(cameraGalleryBottomDialog!!.getImageUri(bitmapFile!!), requireActivity())!!.toUri())
+                    Log.i("bitmapFileUrl_C", bitmapFile?.path.toString())
+                    imageURIList.add(requireNotNull(bitmapFile?.path?.toUri()))
                     binding.imageCount.text = "선택된 사진 : 1장"
+                    isCameraMode = true
+                    isGalleryMode = false
                 }
 
                 ACTION_REQUEST_GALLERY -> {
@@ -302,7 +378,8 @@ class RegisterFragment : Fragment() {
                             else -> {}
                         }
                     }
-
+                    isCameraMode = false
+                    isGalleryMode = true
                 }
 
                 ACTION_REQUEST_IMAGE_CROP -> {
