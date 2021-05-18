@@ -79,7 +79,7 @@ class MainFragment : Fragment() {
             item.setOnClickListener {
 
                 index = if (item == binding.bestItem01) 0 else if (item == binding.bestItem02) 1 else 2
-                (activity as MainActivity).navigationBar.selectedItemId = R.id.menu03
+//                (activity as MainActivity).navigationBar.selectedItemId = R.id.menu03
                 (activity as MainActivity).supportFragmentManager.popBackStack("product", FragmentManager.POP_BACK_STACK_INCLUSIVE)
                 (activity as MainActivity).supportFragmentManager.beginTransaction().replace(
                         R.id.container,

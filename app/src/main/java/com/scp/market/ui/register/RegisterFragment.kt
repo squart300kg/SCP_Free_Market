@@ -523,7 +523,7 @@ class RegisterFragment : Fragment() {
         }
 
 
-        val spinnerAdapter = ArrayAdapter(context!!, R.layout.spinner_item, items)
+        val spinnerAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item, items)
         binding.spinner.adapter = spinnerAdapter
         binding.spinner.setOnTouchListener { _, _ ->
             val view = activity?.currentFocus
@@ -534,6 +534,7 @@ class RegisterFragment : Fragment() {
             activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
             false
         }
+
         binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
 

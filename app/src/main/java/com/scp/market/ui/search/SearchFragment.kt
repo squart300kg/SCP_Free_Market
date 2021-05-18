@@ -28,7 +28,7 @@ class SearchFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        getProductList()
+//        getProductList()
 
         configureObservables()
 
@@ -44,6 +44,8 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        getProductList()
 
         initRecyclerView()
 //        binding.rvSearch.adapter = SearchAdapter(fragmentManager!!)
