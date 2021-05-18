@@ -192,7 +192,7 @@ class RegisterFragment : Fragment() {
 
         // Create a storage reference from our app
         val storageRef = storage.reference
-        Log.i("fileURI1", fileURIList.toString())
+        Log.i("fileURI0", fileURIList.toString())
         var roopIndex = 0
         var downloadImageURLResponseIndex = 0
         while ( roopIndex < fileURIList?.size!!) {
@@ -201,7 +201,7 @@ class RegisterFragment : Fragment() {
 
             Log.i("fileURI1", fileURI)
             var file = Uri.fromFile(File(fileURI))
-            Log.i("fileURI1", file.toString())
+            Log.i("fileURI2", file.toString())
             // Create a reference to 'images/mountains.jpg'
             val timeStamp = SimpleDateFormat("HHmmss", Locale.ROOT).format(Date())
             val imagesRef = storageRef.child("${category}/${timeStamp}_${file.lastPathSegment}")

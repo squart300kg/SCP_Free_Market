@@ -15,7 +15,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
-import com.scp.market.Application
 import com.scp.market.BuildConfig
 import com.scp.market.R
 import com.scp.market.databinding.FragmentMainBinding
@@ -38,8 +37,6 @@ class MainFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        getProductList()
-
         configureObservables()
     }
     override fun onCreateView(
@@ -53,7 +50,10 @@ class MainFragment : Fragment() {
     @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setPriceCancelLine()
+
+        getProductList()
+
+        setMainProducts()
 
         binding.edtSearch.setOnTouchListener(View.OnTouchListener { _, event ->
             val right = 2
@@ -68,7 +68,7 @@ class MainFragment : Fragment() {
         })
     }
 
-    private fun setPriceCancelLine() {
+    private fun setMainProducts() {
         binding.txtItemCancel01.paintFlags = binding.txtItemCancel01.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
         binding.txtItemCancel02.paintFlags = binding.txtItemCancel02.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
         binding.txtItemCancel03.paintFlags = binding.txtItemCancel03.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
@@ -97,7 +97,6 @@ class MainFragment : Fragment() {
                                 putInt("price_org", price_org!!)
                                 putString("image_url", image_url)
                                 putString("content", content)
-                                Log.i("MainFragmentLog", "name : $name\nprice : $price")
 
                             }
                         }).addToBackStack("product").commitAllowingStateLoss()
@@ -105,11 +104,6 @@ class MainFragment : Fragment() {
             index++
         }
 
-//        val requestOptions = RequestOptions().transforms(RoundedCorners(6.dpToPx()), CenterCrop())
-//
-//        Glide.with(this).applyDefaultRequestOptions(requestOptions).load(R.drawable.image_apple).into(binding.ivItem01)
-//        Glide.with(this).applyDefaultRequestOptions(requestOptions).load(R.drawable.image_orange).into(binding.ivItem02)
-//        Glide.with(this).applyDefaultRequestOptions(requestOptions).load(R.drawable.image_pizza).into(binding.ivItem03)
     }
 
     private fun configureObservables() {
@@ -118,16 +112,11 @@ class MainFragment : Fragment() {
                 NetworkState.RUNNING -> {}
 
                 NetworkState.SUCCESS -> {
-                    Log.i("productList결과값 - 성공 : ", searchViewModel.productList.value.toString())
-
                     initMainProduct(searchViewModel.productList.value)
-
-
                 }
 
-                NetworkState.FAILED -> {
-                    Log.i("productList결과값 - 실패 : ", "ㅋㅎㅋㅎ")
-                }
+
+                NetworkState.FAILED -> {}
             }
         })
     }
@@ -171,11 +160,9 @@ class MainFragment : Fragment() {
 
     }
 
-    private fun getProductList() {
-
-        searchViewModel.getProductInfoList(
+    private fun getProductList() =
+            searchViewModel.getProductInfoList(
                 ProductListRequest(null, null)
         )
 
-    }
 }
