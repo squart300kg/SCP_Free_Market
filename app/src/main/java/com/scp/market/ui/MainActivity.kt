@@ -3,6 +3,7 @@ package com.scp.market.ui
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.kakao.sdk.user.UserApiClient
@@ -19,6 +20,11 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     lateinit var navigationBar: BottomNavigationView
 
+    private var lastTimeBackPressed = 0L;
+
+
+
+
     val TAG = "MainActivityLog"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,6 +37,19 @@ class MainActivity : AppCompatActivity() {
         ToastUserInfo()
     }
 
+    override fun onBackPressed() {
+        if(supportFragmentManager.backStackEntryCount == 0) {
+            if(System.currentTimeMillis() - lastTimeBackPressed < 1500){
+                finish();
+                return;
+            }
+            lastTimeBackPressed = System.currentTimeMillis();
+            Toast.makeText(this,"'뒤로' 버튼을 한 번 더 누르면 종료됩니다.",Toast.LENGTH_SHORT).show();
+
+
+        }
+        super.onBackPressed()
+    }
     private fun ToastUserInfo() {
         // 사용자 정보 요청 (기본)
         UserApiClient.instance.me { user, error ->
@@ -54,28 +73,28 @@ class MainActivity : AppCompatActivity() {
         binding.navigationBar.setOnNavigationItemSelectedListener {
             when(it.itemId) {
                 R.id.menu01 -> {
-                    supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                    supportFragmentManager.beginTransaction().replace(R.id.container , MainFragment()).commitAllowingStateLoss()
+                    supportFragmentManager.popBackStack("menu01", FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                    supportFragmentManager.beginTransaction().replace(R.id.container , MainFragment()).addToBackStack("menu01").commitAllowingStateLoss()
                     return@setOnNavigationItemSelectedListener true
                 }
                 R.id.menu02 -> {
-                    supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                    supportFragmentManager.beginTransaction().replace(R.id.container , RegisterFragment()).commitAllowingStateLoss()
+                    supportFragmentManager.popBackStack("menu02", FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                    supportFragmentManager.beginTransaction().replace(R.id.container , RegisterFragment()).addToBackStack("menu02").commitAllowingStateLoss()
                     return@setOnNavigationItemSelectedListener true
                 }
                 R.id.menu03 -> {
-                    supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                    supportFragmentManager.beginTransaction().replace(R.id.container , SearchFragment()).commitAllowingStateLoss()
+                    supportFragmentManager.popBackStack("menu03", FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                    supportFragmentManager.beginTransaction().replace(R.id.container , SearchFragment()).addToBackStack("menu03").commitAllowingStateLoss()
                     return@setOnNavigationItemSelectedListener true
                 }
                 R.id.menu04 -> {
-                    supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                    supportFragmentManager.beginTransaction().replace(R.id.container , ChargeFragment()).commitAllowingStateLoss()
+                    supportFragmentManager.popBackStack("menu04", FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                    supportFragmentManager.beginTransaction().replace(R.id.container , ChargeFragment()).addToBackStack("menu04").commitAllowingStateLoss()
                     return@setOnNavigationItemSelectedListener true
                 }
                 R.id.menu05 -> {
-                    supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                    supportFragmentManager.beginTransaction().replace(R.id.container , MyRoomFragment()).commitAllowingStateLoss()
+                    supportFragmentManager.popBackStack("menu05", FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                    supportFragmentManager.beginTransaction().replace(R.id.container , MyRoomFragment()).addToBackStack("menu05").commitAllowingStateLoss()
                     return@setOnNavigationItemSelectedListener true
                 }
             }

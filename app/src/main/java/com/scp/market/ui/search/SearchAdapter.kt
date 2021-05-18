@@ -112,7 +112,7 @@ class SearchAdapter(
 
             itemView.setOnClickListener {
 
-//                fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                fm.popBackStack("product", FragmentManager.POP_BACK_STACK_INCLUSIVE)
                 fm.beginTransaction().replace(
                         R.id.container ,
                         ProductFragment().apply {
@@ -124,7 +124,7 @@ class SearchAdapter(
                                 putString("content", content)
                             }
                         })
-                        .addToBackStack(null).commitAllowingStateLoss()
+                        .addToBackStack("product").commitAllowingStateLoss()
             }
         }
     }
