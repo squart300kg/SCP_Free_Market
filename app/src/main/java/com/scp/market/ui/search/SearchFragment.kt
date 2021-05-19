@@ -49,13 +49,13 @@ class SearchFragment : Fragment() {
 
         if (!Application.instance?.isStarted!!) { // 앱에 처음 들어왔을 때
             getProductList()
+            initRecyclerView()
         } else { // 두번째, 세번째 이상일 때
+            Log.i("SearchFragmentLog, onViewCreated", Application.instance?.prodList.toString())
+            initRecyclerView()
             addProductList(Application.instance?.prodList)
         }
 
-        initRecyclerView()
-//        binding.rvSearch.adapter = SearchAdapter(fragmentManager!!)
-//        binding.rvSearch.layoutManager = LinearLayoutManager(context)
     }
 
     private fun initRecyclerView() {

@@ -2,6 +2,7 @@ package com.scp.market.ui.register
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.Application
 import android.content.ContentUris
 import android.content.Context
 import android.content.Intent
@@ -78,7 +79,8 @@ class RegisterFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         configureObservables()
-        registerViewModel.getCategories()
+//        registerViewModel.getCategories()
+        initCategories(com.scp.market.Application.instance?.categotyList!!)
 
         binding.btnRegister.setOnClickListener {
 
@@ -501,17 +503,17 @@ class RegisterFragment : Fragment() {
                 }
             }
         })
-        registerViewModel.categoryNetWorkState.observe(this, Observer { networkState ->
-            when(networkState) {
-                NetworkState.RUNNING -> {}
-                NetworkState.SUCCESS -> {
-
-                    initCategories(registerViewModel.categories.value!!)
-
-                }
-                NetworkState.FAILED -> {}
-            }
-        })
+//        registerViewModel.categoryNetWorkState.observe(this, Observer { networkState ->
+//            when(networkState) {
+//                NetworkState.RUNNING -> {}
+//                NetworkState.SUCCESS -> {
+//
+//                    initCategories(registerViewModel.categories.value!!)
+//
+//                }
+//                NetworkState.FAILED -> {}
+//            }
+//        })
     }
 
     private fun initCategories(categoryList: List<Category>) {
@@ -536,7 +538,7 @@ class RegisterFragment : Fragment() {
         }
 
         binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, p3: Long) {
 
                 category_code = categoryList[position].code
                 category_name = categoryList[position].name

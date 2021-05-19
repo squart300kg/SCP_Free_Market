@@ -22,6 +22,7 @@ import com.scp.market.model.product.response.Product
 import com.scp.market.state.NetworkState
 import com.scp.market.ui.MainActivity
 import com.scp.market.ui.product.ProductFragment
+import com.scp.market.ui.register.RegisterViewModel
 import com.scp.market.ui.search.SearchViewModel
 import com.scp.market.util.dpToPx
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -30,7 +31,10 @@ import java.text.DecimalFormat
 class MainFragment : Fragment() {
 
     private lateinit var binding: FragmentMainBinding
+
     private val searchViewModel: SearchViewModel by sharedViewModel()
+    private val registerViewModel: RegisterViewModel by viewModel()
+
     private var prodList: List<Product>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -135,10 +139,23 @@ class MainFragment : Fragment() {
                 }
             }
         })
+
+        registerViewModel.categoryNetWorkState.observe(this, Observer { networkState ->
+            when(networkState) {
+                NetworkState.RUNNING -> {}
+                NetworkState.SUCCESS -> {
+
+                    Application.instance?.categotyList = registerViewModel.categories.value!!
+
+                }
+                NetworkState.FAILED -> {}
+            }
+        })
     }
 
     private fun initMainProduct(productList: List<Product>?) {
 
+        Log.i("MainFragmentLog", "1")
         prodList = productList
 
         val requestOptions = RequestOptions().transforms(RoundedCorners(6.dpToPx()), CenterCrop())
@@ -180,6 +197,7 @@ class MainFragment : Fragment() {
         searchViewModel.getProductInfoList(
                 ProductListRequest(null, null)
         )
+        registerViewModel.getCategories()
     }
 
 

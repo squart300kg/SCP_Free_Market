@@ -58,18 +58,27 @@ class SearchAdapter(
     fun addAll(list: List<Product>?) {
 
         if (list != null) {
-
+            Log.i("addAllLog", "1")
             if (data.size > 0) {
 
-
+                Log.i("addAllLog", "2")
                 if (data[0].name != list[0].name) {
-
+                    Log.i("addAllLog", "3")
                     data = ArrayList()
                     data.addAll(list)
                     notifyDataSetChanged()
-                }
-            } else {
+                } else {
+                    Log.i("addAllLog", "3.5, $list")
 
+                    // 뒤로가기 돌아왔을시, 데이터 바인딩을 위한 코드
+                    data.clear()
+                    notifyDataSetChanged()
+                    data.addAll(list)
+                    notifyDataSetChanged()
+                }
+
+            } else {
+                Log.i("addAllLog", "4")
                 data.addAll(list)
                 notifyDataSetChanged()
 

@@ -6,6 +6,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.kakao.sdk.user.UserApiClient
 import com.scp.market.R
@@ -71,47 +72,48 @@ class MainActivity : AppCompatActivity() {
 
     private fun setBottomNavigationBar() {
         navigationBar = binding.navigationBar
-        supportFragmentManager.beginTransaction().replace(R.id.container , MainFragment()).commitAllowingStateLoss()
+        supportFragmentManager.beginTransaction().replace(R.id.container , MainFragment(), "menu01").commitAllowingStateLoss()
 
         binding.navigationBar.setOnNavigationItemSelectedListener {
             when(it.itemId) {
                 R.id.menu01 -> {
-                    supportFragmentManager.popBackStack("menu01", FragmentManager.POP_BACK_STACK_INCLUSIVE)
+//                    supportFragmentManager.popBackStack("menu01", FragmentManager.POP_BACK_STACK_INCLUSIVE)
                     supportFragmentManager.beginTransaction()
-                            .replace(R.id.container , MainFragment())
+                            .replace(R.id.container , MainFragment(), "menu01")
                             .addToBackStack("menu01")
                             .commitAllowingStateLoss()
                     return@setOnNavigationItemSelectedListener true
                 }
                 R.id.menu02 -> {
-                    supportFragmentManager.popBackStack("menu02", FragmentManager.POP_BACK_STACK_INCLUSIVE)
+//                    supportFragmentManager.popBackStack("menu02", FragmentManager.POP_BACK_STACK_INCLUSIVE)
                     supportFragmentManager.beginTransaction()
-                            .replace(R.id.container , RegisterFragment())
+                            .replace(R.id.container , RegisterFragment(), "menu02")
                             .addToBackStack("menu02")
                             .commitAllowingStateLoss()
                     return@setOnNavigationItemSelectedListener true
                 }
                 R.id.menu03 -> {
-                    supportFragmentManager.popBackStack("menu03", FragmentManager.POP_BACK_STACK_INCLUSIVE)
+//                    supportFragmentManager.popBackStack("menu03", FragmentManager.POP_BACK_STACK_INCLUSIVE)
                     supportFragmentManager.beginTransaction()
-                            .replace(R.id.container , SearchFragment())
+                            .replace(R.id.container , SearchFragment(), "menu03")
                             .addToBackStack("menu03")
                             .commitAllowingStateLoss()
                     return@setOnNavigationItemSelectedListener true
                 }
                 R.id.menu04 -> {
-                    supportFragmentManager.popBackStack("menu04", FragmentManager.POP_BACK_STACK_INCLUSIVE)
+//                    supportFragmentManager.popBackStack("menu04", FragmentManager.POP_BACK_STACK_INCLUSIVE)
                     supportFragmentManager.beginTransaction()
-                            .replace(R.id.container , ChargeFragment())
+                            .replace(R.id.container , ChargeFragment(), "menu04")
                             .addToBackStack("menu04")
                             .commitAllowingStateLoss()
                     return@setOnNavigationItemSelectedListener true
                 }
                 R.id.menu05 -> {
-                    supportFragmentManager.popBackStack("menu05", FragmentManager.POP_BACK_STACK_INCLUSIVE)
+//                    supportFragmentManager.popBackStack("menu05", FragmentManager.POP_BACK_STACK_INCLUSIVE)
                     supportFragmentManager.beginTransaction()
-                            .replace(R.id.container , MyRoomFragment())
+                            .replace(R.id.container , MyRoomFragment(), "menu05")
                             .addToBackStack("menu05")
+//                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                             .commitAllowingStateLoss()
                     return@setOnNavigationItemSelectedListener true
                 }
@@ -127,11 +129,21 @@ class MainActivity : AppCompatActivity() {
         val tag4: Fragment? = supportFragmentManager.findFragmentByTag("menu04")
         val tag5: Fragment? = supportFragmentManager.findFragmentByTag("menu05")
 
-        if(tag1 != null && tag1.isVisible) {navigation.menu.findItem(R.id.menu01).isChecked = true }
-        if(tag2 != null && tag2.isVisible) {navigation.menu.findItem(R.id.menu02).isChecked = true }
-        if(tag3 != null && tag3.isVisible) {navigation.menu.findItem(R.id.menu03).isChecked = true }
-        if(tag4 != null && tag4.isVisible) {navigation.menu.findItem(R.id.menu04).isChecked = true }
-        if(tag5 != null && tag5.isVisible) {navigation.menu.findItem(R.id.menu05).isChecked = true }
+        if(tag1 != null && tag1.isVisible) {
+            Log.i("updateBottomMenu", "1")
+            navigation.menu.findItem(R.id.menu01).isChecked = true }
+        if(tag2 != null && tag2.isVisible) {
+            Log.i("updateBottomMenu", "2")
+            navigation.menu.findItem(R.id.menu02).isChecked = true }
+        if(tag3 != null && tag3.isVisible) {
+            Log.i("updateBottomMenu", "3")
+            navigation.menu.findItem(R.id.menu03).isChecked = true }
+        if(tag4 != null && tag4.isVisible) {
+            Log.i("updateBottomMenu", "4")
+            navigation.menu.findItem(R.id.menu04).isChecked = true }
+        if(tag5 != null && tag5.isVisible) {
+            Log.i("updateBottomMenu", "5")
+            navigation.menu.findItem(R.id.menu05).isChecked = true }
 
     }
 }
