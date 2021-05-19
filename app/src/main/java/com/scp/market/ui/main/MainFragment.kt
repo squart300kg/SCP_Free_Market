@@ -4,17 +4,16 @@ import android.annotation.SuppressLint
 import android.graphics.Paint
 import android.os.Bundle
 import android.util.Log
+import android.view.*
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.MotionEvent
-import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
+import com.scp.market.Application
 import com.scp.market.BuildConfig
 import com.scp.market.R
 import com.scp.market.databinding.FragmentMainBinding
@@ -25,18 +24,19 @@ import com.scp.market.ui.MainActivity
 import com.scp.market.ui.product.ProductFragment
 import com.scp.market.ui.search.SearchViewModel
 import com.scp.market.util.dpToPx
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.DecimalFormat
-
 class MainFragment : Fragment() {
 
     private lateinit var binding: FragmentMainBinding
-    private val searchViewModel: SearchViewModel by viewModel()
+    private val searchViewModel: SearchViewModel by sharedViewModel()
     private var prodList: List<Product>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        Log.i("MainFragmentLog", "onCreate")
         configureObservables()
     }
     override fun onCreateView(
@@ -51,7 +51,11 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        getProductList()
+        if (!Application.instance?.isStarted!!) { // 앱에 처음 들어왔을 때
+            getProductList()
+        } else { // 두번째, 세번째 이상일 때
+            initMainProduct(Application.instance?.prodList)
+        }
 
         setMainProducts()
 
@@ -112,11 +116,23 @@ class MainFragment : Fragment() {
                 NetworkState.RUNNING -> {}
 
                 NetworkState.SUCCESS -> {
-                    initMainProduct(searchViewModel.productList.value)
+                    Log.i("MainFragmentLog", "SUCCESS")
+                    Application.instance?.prodList = searchViewModel.productList.value
+                    Application.instance?.isStarted = true
+                    initMainProduct(Application.instance?.prodList)
+//                    initMainProduct(searchViewModel.productList.value)
+
+
+
+
+//                    dismissProgressBar()
                 }
 
 
-                NetworkState.FAILED -> {}
+                NetworkState.FAILED -> {
+                    Log.i("MainFragmentLog", "FAIL")
+                    Toast.makeText(activity, "TOO MANY REQUEST", Toast.LENGTH_LONG).show()
+                }
             }
         })
     }
@@ -134,7 +150,6 @@ class MainFragment : Fragment() {
         binding.txtItem02.text = productList?.get(1)?.name
         binding.txtItem03.text = productList?.get(2)?.name
 
-        "${DecimalFormat("###,###").format(productList?.get(0)?.price)}원"
         binding.txtItemPrice01.text = "${DecimalFormat("###,###").format(productList?.get(0)?.price)}원"
         binding.txtItemPrice02.text = "${DecimalFormat("###,###").format(productList?.get(1)?.price)}원"
         binding.txtItemPrice03.text = "${DecimalFormat("###,###").format(productList?.get(2)?.price)}원"
@@ -160,9 +175,28 @@ class MainFragment : Fragment() {
 
     }
 
-    private fun getProductList() =
-            searchViewModel.getProductInfoList(
+    private fun getProductList() {
+//        createProgressBar()
+        searchViewModel.getProductInfoList(
                 ProductListRequest(null, null)
         )
+    }
 
+
+    private fun createProgressBar() {
+        binding.rootView.setBackgroundResource(R.color.very_light_gray)
+        binding.progressBar.visibility = View.VISIBLE
+        activity?.window?.setFlags(
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+        )
+    }
+
+    private fun dismissProgressBar() {
+        binding.rootView.setBackgroundResource(R.color.white)
+        binding.progressBar.visibility = View.GONE
+        requireActivity().window!!.clearFlags(
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+        )
+    }
 }

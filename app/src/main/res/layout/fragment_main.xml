@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/rootView"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -195,7 +197,7 @@
                         android:lines="2"
                         android:ellipsize="end"
                         android:textColor="@color/semi_black"
-                        android:text="귤로장생 GAP 인증 당도선별 카라향..."
+                        android:text=" "
                         android:layout_marginTop="9dp"
                         app:layout_constraintTop_toBottomOf="@id/ivItem01"
                         />
@@ -208,7 +210,7 @@
                         android:textSize="12sp"
                         android:textColor="@color/semi_black"
                         android:layout_marginTop="4dp"
-                        android:text="117,000원"
+                        android:text=" "
                         app:layout_constraintTop_toBottomOf="@id/txtItem01"
                         />
 
@@ -218,7 +220,7 @@
                         android:layout_height="wrap_content"
                         android:textSize="10sp"
                         android:textColor="#999999"
-                        android:text="137,000원"
+                        android:text=" "
                         android:layout_marginTop="2dp"
                         app:layout_constraintTop_toBottomOf="@id/txtItemPrice01" />
 
@@ -252,7 +254,7 @@
                         android:lines="2"
                         android:ellipsize="end"
                         android:textColor="@color/semi_black"
-                        android:text="귤로장생 GAP 인증 당도선별 카라향..."
+                        android:text=" "
                         android:layout_marginTop="9dp"
                         app:layout_constraintTop_toBottomOf="@id/ivItem02"
                         />
@@ -265,7 +267,7 @@
                         android:textSize="12sp"
                         android:textColor="@color/semi_black"
                         android:layout_marginTop="4dp"
-                        android:text="117,000원"
+                        android:text=" "
                         app:layout_constraintTop_toBottomOf="@id/txtItem02"
                         />
 
@@ -275,7 +277,7 @@
                         android:layout_height="wrap_content"
                         android:textSize="10sp"
                         android:textColor="#999999"
-                        android:text="137,000원"
+                        android:text=" "
                         android:layout_marginTop="2dp"
                         app:layout_constraintTop_toBottomOf="@id/txtItemPrice02" />
 
@@ -309,7 +311,7 @@
                         android:lines="2"
                         android:ellipsize="end"
                         android:textColor="@color/semi_black"
-                        android:text="귤로장생 GAP 인증 당도선별 카라향..."
+                        android:text=" "
                         android:layout_marginTop="9dp"
                         app:layout_constraintTop_toBottomOf="@id/ivItem03"
                         />
@@ -322,7 +324,7 @@
                         android:textSize="12sp"
                         android:textColor="@color/semi_black"
                         android:layout_marginTop="4dp"
-                        android:text="117,000원"
+                        android:text=" "
                         app:layout_constraintTop_toBottomOf="@id/txtItem03"
                         />
 
@@ -332,7 +334,7 @@
                         android:layout_height="wrap_content"
                         android:textSize="10sp"
                         android:textColor="#999999"
-                        android:text="137,000원"
+                        android:text=" "
                         android:layout_marginTop="2dp"
                         app:layout_constraintTop_toBottomOf="@id/txtItemPrice03" />
 
@@ -343,6 +345,16 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.core.widget.NestedScrollView>
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone"
+        />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

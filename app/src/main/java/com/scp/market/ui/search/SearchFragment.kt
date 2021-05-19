@@ -9,10 +9,12 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.scp.market.Application
 import com.scp.market.databinding.FragmentSearchBinding
 import com.scp.market.model.product.request.ProductListRequest
 import com.scp.market.model.product.response.Product
 import com.scp.market.state.NetworkState
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : Fragment() {
@@ -23,7 +25,7 @@ class SearchFragment : Fragment() {
 
     private var productList: List<Product>? = null
 
-    private val searchViewModel: SearchViewModel by viewModel()
+    private val searchViewModel: SearchViewModel by sharedViewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,7 +47,11 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        getProductList()
+        if (!Application.instance?.isStarted!!) { // 앱에 처음 들어왔을 때
+            getProductList()
+        } else { // 두번째, 세번째 이상일 때
+            addProductList(Application.instance?.prodList)
+        }
 
         initRecyclerView()
 //        binding.rvSearch.adapter = SearchAdapter(fragmentManager!!)
@@ -77,6 +83,7 @@ class SearchFragment : Fragment() {
 
                 NetworkState.FAILED -> {
                     Log.i("productList결과값 - 실패 : ", "ㅋㅎㅋㅎ")
+                    Toast.makeText(activity, "TOO MANY REQUEST", Toast.LENGTH_LONG).show()
                 }
             }
         })
@@ -98,5 +105,22 @@ class SearchFragment : Fragment() {
         }
 
     }
+
+//    private fun createProgressBar() {
+//        binding.rootView.setBackgroundResource(R.color.very_light_gray)
+//        binding.progressBar.visibility = View.VISIBLE
+//        activity?.window?.setFlags(
+//                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+//                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+//        )
+//    }
+//
+//    private fun dismissProgressBar() {
+//        binding.rootView.setBackgroundResource(R.color.white)
+//        binding.progressBar.visibility = View.GONE
+//        activity?.window?.clearFlags(
+//                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+//        )
+//    }
 
 }

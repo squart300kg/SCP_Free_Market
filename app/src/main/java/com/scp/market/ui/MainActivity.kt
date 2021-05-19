@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
 
         }
         super.onBackPressed()
-//        updateBottomMenu(binding.navigationBar)
+        updateBottomMenu(binding.navigationBar)
     }
     private fun ToastUserInfo() {
         // 사용자 정보 요청 (기본)
@@ -79,7 +79,7 @@ class MainActivity : AppCompatActivity() {
                     supportFragmentManager.popBackStack("menu01", FragmentManager.POP_BACK_STACK_INCLUSIVE)
                     supportFragmentManager.beginTransaction()
                             .replace(R.id.container , MainFragment())
-//                            .addToBackStack("menu01")
+                            .addToBackStack("menu01")
                             .commitAllowingStateLoss()
                     return@setOnNavigationItemSelectedListener true
                 }
@@ -87,7 +87,7 @@ class MainActivity : AppCompatActivity() {
                     supportFragmentManager.popBackStack("menu02", FragmentManager.POP_BACK_STACK_INCLUSIVE)
                     supportFragmentManager.beginTransaction()
                             .replace(R.id.container , RegisterFragment())
-//                            .addToBackStack("menu02")
+                            .addToBackStack("menu02")
                             .commitAllowingStateLoss()
                     return@setOnNavigationItemSelectedListener true
                 }
@@ -95,7 +95,7 @@ class MainActivity : AppCompatActivity() {
                     supportFragmentManager.popBackStack("menu03", FragmentManager.POP_BACK_STACK_INCLUSIVE)
                     supportFragmentManager.beginTransaction()
                             .replace(R.id.container , SearchFragment())
-//                            .addToBackStack("menu03")
+                            .addToBackStack("menu03")
                             .commitAllowingStateLoss()
                     return@setOnNavigationItemSelectedListener true
                 }
@@ -103,7 +103,7 @@ class MainActivity : AppCompatActivity() {
                     supportFragmentManager.popBackStack("menu04", FragmentManager.POP_BACK_STACK_INCLUSIVE)
                     supportFragmentManager.beginTransaction()
                             .replace(R.id.container , ChargeFragment())
-//                            .addToBackStack("menu04")
+                            .addToBackStack("menu04")
                             .commitAllowingStateLoss()
                     return@setOnNavigationItemSelectedListener true
                 }
@@ -111,7 +111,7 @@ class MainActivity : AppCompatActivity() {
                     supportFragmentManager.popBackStack("menu05", FragmentManager.POP_BACK_STACK_INCLUSIVE)
                     supportFragmentManager.beginTransaction()
                             .replace(R.id.container , MyRoomFragment())
-//                            .addToBackStack("menu05")
+                            .addToBackStack("menu05")
                             .commitAllowingStateLoss()
                     return@setOnNavigationItemSelectedListener true
                 }

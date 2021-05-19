@@ -4,6 +4,8 @@ import android.app.Application
 import android.util.Log
 import com.kakao.sdk.common.KakaoSdk
 import com.scp.market.di.appComponent
+import com.scp.market.model.Category
+import com.scp.market.model.product.response.Product
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -11,6 +13,9 @@ import org.koin.core.context.startKoin
 open class Application: Application() {
 
     var user: String? = null
+    var prodList: List<Product>? = null
+    var categotyList: List<Category>? = null
+    var isStarted = false
 
     override fun onCreate() {
         super.onCreate()

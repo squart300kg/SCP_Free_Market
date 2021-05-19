@@ -26,8 +26,14 @@ class SearchViewModel(private val productRepository: ProductRepository): BaseVie
                 val response = productRepository.getProductList(productListRequest)
 
                 if (response.isSuccessful) {
-                    productList.postValue(response.body()?.data?.list)
-                    productListInfoNetworkState.postValue(NetworkState.SUCCESS)
+                    if (response.body()?.code == -7) { // TOO MANY REQUEST
+                        productListInfoNetworkState.postValue(NetworkState.FAILED)
+                        Log.i("searchResponseLog", "-7")
+                    } else { // 200
+                        productList.postValue(response.body()?.data?.list)
+                        productListInfoNetworkState.postValue(NetworkState.SUCCESS)
+                        Log.i("searchResponseLog", "200")
+                    }
                 } else {
 
                     productListInfoNetworkState.postValue(NetworkState.FAILED)
