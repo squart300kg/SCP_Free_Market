@@ -10,7 +10,6 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
 import com.scp.market.R
 import com.scp.market.databinding.FragmentMyroomBinding
-import com.scp.market.ui.LocalAdminFragment
 
 class MyRoomFragment : Fragment() {
 
@@ -27,7 +26,7 @@ class MyRoomFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.btnLocalAdmin.setOnClickListener {
-            fragmentManager!!.beginTransaction().replace(R.id.container, LocalAdminFragment()).addToBackStack(null).commitAllowingStateLoss()
+            parentFragmentManager.beginTransaction().replace(R.id.container, LocalAdminFragment(), "localAdmin").addToBackStack(null).commitAllowingStateLoss()
         }
 
         val requestOptions = RequestOptions().transforms(CircleCrop())

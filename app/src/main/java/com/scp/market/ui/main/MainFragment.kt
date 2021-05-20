@@ -21,6 +21,7 @@ import com.scp.market.model.product.request.ProductListRequest
 import com.scp.market.model.product.response.Product
 import com.scp.market.state.NetworkState
 import com.scp.market.ui.MainActivity
+import com.scp.market.ui.myroom.MyRoomViewModel
 import com.scp.market.ui.product.ProductFragment
 import com.scp.market.ui.register.RegisterViewModel
 import com.scp.market.ui.search.SearchViewModel
@@ -34,6 +35,7 @@ class MainFragment : Fragment() {
 
     private val searchViewModel: SearchViewModel by sharedViewModel()
     private val registerViewModel: RegisterViewModel by viewModel()
+    private val myroomViewModel: MyRoomViewModel by viewModel()
 
     private var prodList: List<Product>? = null
 
@@ -157,6 +159,30 @@ class MainFragment : Fragment() {
                 NetworkState.FAILED -> {}
             }
         })
+
+        myroomViewModel.userInfoNetworkState.observe(this, Observer { networkState ->
+            when(networkState) {
+                NetworkState.RUNNING -> {}
+                NetworkState.SUCCESS -> {
+
+                    Log.i("userInfoResult", myroomViewModel.userInfoList.value.toString())
+                    Application.instance?.userInfoList = myroomViewModel.userInfoList.value
+                }
+                NetworkState.FAILED -> {}
+            }
+        })
+
+        myroomViewModel.injuryNetworkState.observe(this, Observer { networkState ->
+            when(networkState) {
+                NetworkState.RUNNING -> {}
+                NetworkState.SUCCESS -> {
+
+                    Log.i("userInfoResult", myroomViewModel.injuryList.value.toString())
+                    Application.instance?.injuryList = myroomViewModel.injuryList.value
+                }
+                NetworkState.FAILED -> {}
+            }
+        })
     }
 
     private fun initMainProduct(productList: List<Product>?) {
@@ -203,7 +229,12 @@ class MainFragment : Fragment() {
         searchViewModel.getProductInfoList(
                 ProductListRequest(null, null)
         )
+
         registerViewModel.getCategories()
+
+        myroomViewModel.getUserInfoList()
+
+        myroomViewModel.getInjuryList()
     }
 
 

@@ -128,6 +128,7 @@ class MainActivity : AppCompatActivity() {
         val tag3: Fragment? = supportFragmentManager.findFragmentByTag("menu03")
         val tag4: Fragment? = supportFragmentManager.findFragmentByTag("menu04")
         val tag5: Fragment? = supportFragmentManager.findFragmentByTag("menu05")
+        val tag6: Fragment? = supportFragmentManager.findFragmentByTag("localAdmin")
 
         if(tag1 != null && tag1.isVisible) {
             Log.i("updateBottomMenu", "1")
@@ -143,6 +144,9 @@ class MainActivity : AppCompatActivity() {
             navigation.menu.findItem(R.id.menu04).isChecked = true }
         if(tag5 != null && tag5.isVisible) {
             Log.i("updateBottomMenu", "5")
+            navigation.menu.findItem(R.id.menu05).isChecked = true }
+        if(tag6 != null && tag6.isVisible) {
+            Log.i("updateBottomMenu", "6")
             navigation.menu.findItem(R.id.menu05).isChecked = true }
 
     }

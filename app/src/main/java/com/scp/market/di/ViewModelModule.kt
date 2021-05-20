@@ -1,6 +1,7 @@
 package com.scp.market.di
 
 import com.scp.market.ui.login.LoginViewModel
+import com.scp.market.ui.myroom.MyRoomViewModel
 import com.scp.market.ui.register.RegisterViewModel
 import com.scp.market.ui.search.SearchViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -11,5 +12,6 @@ val viewModelModule = module {
     viewModel { LoginViewModel(get(), get()) }
     viewModel { RegisterViewModel(get()) }
     viewModel { SearchViewModel(get()) }
+    viewModel { MyRoomViewModel(get()) }
 
 }

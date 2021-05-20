@@ -3,6 +3,7 @@ package com.scp.market.di
 import com.scp.market.Application
 import com.scp.market.BuildConfig
 import com.scp.market.api.LoginService
+import com.scp.market.api.MyRoomService
 import com.scp.market.api.ProductService
 import com.scp.market.network.AddCookiesInterceptor
 import okhttp3.Interceptor
@@ -54,5 +55,6 @@ val networkModule = module {
 
     factory { get<Retrofit>().create(ProductService::class.java) }
     factory { get<Retrofit>().create(LoginService::class.java) }
+    factory { get<Retrofit>().create(MyRoomService::class.java) }
 
 }
