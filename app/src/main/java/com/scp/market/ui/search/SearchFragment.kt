@@ -56,6 +56,11 @@ class SearchFragment : Fragment() {
             addProductList(Application.instance?.prodList)
         }
 
+        binding.refreshLayout?.setOnRefreshListener {
+            initRecyclerView()
+            getProductList()
+        }
+
     }
 
     private fun initRecyclerView() {
@@ -78,12 +83,15 @@ class SearchFragment : Fragment() {
 
                 NetworkState.SUCCESS -> {
                     Log.i("productList결과값 - 성공 : ", searchViewModel.productList.value.toString())
-                    addProductList(searchViewModel.productList.value)
+                    Application.instance?.prodList = searchViewModel.productList.value
+                    addProductList(Application.instance?.prodList)
+                    binding.refreshLayout.isRefreshing = false
                 }
 
                 NetworkState.FAILED -> {
                     Log.i("productList결과값 - 실패 : ", "ㅋㅎㅋㅎ")
                     Toast.makeText(activity, "TOO MANY REQUEST", Toast.LENGTH_LONG).show()
+                    binding.refreshLayout.isRefreshing = false
                 }
             }
         })

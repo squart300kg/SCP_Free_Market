@@ -74,6 +74,10 @@ class MainFragment : Fragment() {
             }
             false
         })
+
+        binding.refershLayout?.setOnRefreshListener {
+            getProductList()
+        }
     }
 
     private fun setMainProducts() {
@@ -124,6 +128,7 @@ class MainFragment : Fragment() {
                     Application.instance?.prodList = searchViewModel.productList.value
                     Application.instance?.isStarted = true
                     initMainProduct(Application.instance?.prodList)
+                    binding.refershLayout.isRefreshing = false
 //                    initMainProduct(searchViewModel.productList.value)
 
 
@@ -134,6 +139,7 @@ class MainFragment : Fragment() {
 
 
                 NetworkState.FAILED -> {
+                    binding.refershLayout.isRefreshing = false
                     Log.i("MainFragmentLog", "FAIL")
                     Toast.makeText(activity, "TOO MANY REQUEST", Toast.LENGTH_LONG).show()
                 }
