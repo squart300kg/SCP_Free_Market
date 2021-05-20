@@ -138,15 +138,15 @@ class CameraGalleryBottomDialog(
                                 intent,
                                 PICK_FROM_CAMERA
                         )
-                        Toast.makeText(activity, "사진촬영1", Toast.LENGTH_LONG).show()
+//                        Toast.makeText(activity, "사진촬영1", Toast.LENGTH_LONG).show()
                     } else {
                         activity.startActivityForResult(
                                 intent,
                                 PICK_FROM_CAMERA
                         )
-                        Toast.makeText(activity, "사진촬영2", Toast.LENGTH_LONG).show()
+//                        Toast.makeText(activity, "사진촬영2", Toast.LENGTH_LONG).show()
                     }
-                    Toast.makeText(activity, "사진촬영3", Toast.LENGTH_LONG).show()
+//                    Toast.makeText(activity, "사진촬영3", Toast.LENGTH_LONG).show()
                 }
             } else {
                 val photoUri = Uri.fromFile(cameraImageFile)

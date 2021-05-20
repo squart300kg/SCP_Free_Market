@@ -492,7 +492,8 @@ class RegisterFragment : Fragment() {
 
                     Toast.makeText(activity, "상품 등록을 완료하였습니다!", Toast.LENGTH_LONG).show()
                     dismissProgressBar()
-                    (activity as MainActivity).navigationBar.selectedItemId = R.id.menu01
+
+                    blankToInputField()
 
                 }
                 NetworkState.FAILED -> {
@@ -514,6 +515,23 @@ class RegisterFragment : Fragment() {
 //                NetworkState.FAILED -> {}
 //            }
 //        })
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun blankToInputField() {
+        binding.btnRegisterImage.setImageResource(R.drawable.ic_register_image)
+        binding.spinner.setSelection(0)
+        binding.imageCount.text = "자율시장 올리기(1~10장)\n: 직접 촬영 또는 갤러리 선택"
+        binding.edt02.text = null
+        binding.edt03.text = null
+        binding.edt04.text = null
+        binding.edt05.text = null
+        binding.edt06.text = null
+        binding.edt07.text = null
+        binding.edt08.text = null
+        binding.edt09.text = null
+        binding.edt10.text = null
+        binding.edt11.text = null
     }
 
     private fun initCategories(categoryList: List<Category>) {
