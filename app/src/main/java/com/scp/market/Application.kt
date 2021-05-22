@@ -35,7 +35,7 @@ open class Application: Application() {
     }
 
     private fun initKakao() =
-        KakaoSdk.init(this, "5bdefe59ab1fd149066e8f006b54c243")
+        KakaoSdk.init(this, getString(R.string.kakao_api_key))
 
 
 

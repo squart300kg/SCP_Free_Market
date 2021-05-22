@@ -40,15 +40,15 @@ class LoginActivity : AppCompatActivity() {
             initKakaoLogin()
         }
 
-        binding.btnEmailLogin.setOnClickListener {
-            loginViewModel.getAccessToken(
-                    AccessTokenRequest(
-                            getString(R.string.imweb_API_Key),
-                            getString(R.string.imweb_Secret_Key)
-                    )
-            )
-
-        }
+//        binding.btnEmailLogin.setOnClickListener {
+//            loginViewModel.getAccessToken(
+//                    AccessTokenRequest(
+//                            getString(R.string.imweb_API_Key),
+//                            getString(R.string.imweb_Secret_Key)
+//                    )
+//            )
+//
+//        }
 
         getHashKey()
 

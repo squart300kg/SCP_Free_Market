@@ -24,6 +24,7 @@ import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
 import com.scp.market.BuildConfig
 import com.scp.market.R
+import com.scp.market.ui.MainActivity
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
