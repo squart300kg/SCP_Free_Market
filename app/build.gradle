@@ -9,6 +9,14 @@ repositories {
     mavenCentral()
 }
 android {
+    signingConfigs {
+        release {
+            storeFile file('C:\\Users\\IBK\\AndroidStudioProjects\\SCP_Free_Market\\scp.jks')
+            storePassword 'scp.jks'
+            keyAlias 'scp.jks'
+            keyPassword 'scp.jks'
+        }
+    }
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
 
@@ -33,6 +41,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
     compileOptions {
