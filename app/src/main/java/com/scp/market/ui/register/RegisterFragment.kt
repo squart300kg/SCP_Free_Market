@@ -415,7 +415,7 @@ class RegisterFragment : Fragment() {
             val timeStamp = SimpleDateFormat("HHmmss", Locale.ROOT).format(Date())
             val imageFileName = "scp" + timeStamp + "_"
 
-            val file = File(Environment.getExternalStorageDirectory().toString() + "/scp/")
+            val file = File((activity)?.getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString() + "/scp/")
             if (!file.exists()) {
                 file.mkdir()
             }
