@@ -4,5 +4,10 @@
     <string name="imweb_API_Key">cd187c7953e48543432e3e08e2bee3321e78d100ca</string>
     <string name="imweb_Secret_Key">8db6112ef69ba093b64b31</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="kakao_api_key">8c1d8ed311e865a90dcd20760bf38683</string>
+
+<!--    원래 api키-->
+<!--    <string name="kakao_api_key">8c1d8ed311e865a90dcd20760bf38683</string>-->
+
+<!--    imweb api키-->
+    <string name="kakao_api_key">5bdefe59ab1fd149066e8f006b54c243</string>
 </resources>
