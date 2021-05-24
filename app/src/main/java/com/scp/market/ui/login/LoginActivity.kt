@@ -40,15 +40,17 @@ class LoginActivity : AppCompatActivity() {
             initKakaoLogin()
         }
 
-//        binding.btnEmailLogin.setOnClickListener {
-//            loginViewModel.getAccessToken(
-//                    AccessTokenRequest(
-//                            getString(R.string.imweb_API_Key),
-//                            getString(R.string.imweb_Secret_Key)
-//                    )
-//            )
-//
-//        }
+        binding.btnEmailLogin.setOnClickListener {
+            UserApiClient.instance.unlink { error ->
+                if (error != null) {
+                    Log.e(TAG, "연결 끊기 실패", error)
+                }
+                else {
+                    Log.i(TAG, "연결 끊기 성공. SDK에서 토큰 삭제 됨")
+                }
+            }
+
+        }
 
         getHashKey()
 

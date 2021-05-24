@@ -11,7 +11,8 @@ repositories {
 android {
     signingConfigs {
         release {
-            storeFile file('C:\\Users\\IBK\\AndroidStudioProjects\\SCP_Free_Market\\scp.jks')
+//            storeFile file('C:\\Users\\IBK\\AndroidStudioProjects\\SCP_Free_Market\\scp.jks')
+            storeFile file('../scp.jks')
             storePassword 'scp.jks'
             keyAlias 'scp.jks'
             keyPassword 'scp.jks'

@@ -56,6 +56,7 @@ class MainActivity : AppCompatActivity() {
     }
     private fun ToastUserInfo() {
         // 사용자 정보 요청 (기본)
+
         UserApiClient.instance.me { user, error ->
             if (error != null) {
                 Log.e(TAG, "사용자 정보 요청 실패", error)
@@ -65,7 +66,8 @@ class MainActivity : AppCompatActivity() {
                         "\n회원번호: ${user.id}" +
                         "\n이메일: ${user.kakaoAccount?.email}" +
                         "\n닉네임: ${user.kakaoAccount?.profile?.nickname}" +
-                        "\n프로필사진: ${user.kakaoAccount?.profile?.thumbnailImageUrl}")
+                        "\n프로필사진: ${user.kakaoAccount?.profile?.thumbnailImageUrl}" +
+                        "\n접근토근 : ${user.kakaoAccount?.phoneNumber}")
             }
         }
     }

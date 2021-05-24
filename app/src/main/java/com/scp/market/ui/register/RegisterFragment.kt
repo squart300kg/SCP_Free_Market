@@ -50,7 +50,6 @@ import kotlin.collections.ArrayList
 
 class RegisterFragment : Fragment() {
 
-    // TODO 공급책임자, 책임자 연락처 처리할 것
 
     private lateinit var binding: FragmentRegisterBinding
     private val registerViewModel: RegisterViewModel by viewModel()
