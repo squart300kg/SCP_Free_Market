@@ -224,6 +224,7 @@ class CameraGalleryBottomDialog(
 
         // 이미지가 저장될 폴더 이름 ( scp )
         val storageDir = File((activity).getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString() + "/scp/")
+//        val storageDir = File((activity).getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString() + "/scp/")
         if (!storageDir.exists()) {
             storageDir.mkdirs()
         }

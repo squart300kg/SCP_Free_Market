@@ -68,6 +68,7 @@ class MainActivity : AppCompatActivity() {
                         "\n닉네임: ${user.kakaoAccount?.profile?.nickname}" +
                         "\n프로필사진: ${user.kakaoAccount?.profile?.thumbnailImageUrl}" +
                         "\n접근토근 : ${user.kakaoAccount?.phoneNumber}")
+
             }
         }
     }
