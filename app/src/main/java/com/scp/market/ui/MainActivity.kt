@@ -8,9 +8,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import com.kakao.sdk.user.UserApiClient
 import com.scp.market.R
 import com.scp.market.databinding.ActivityMainBinding
+import com.scp.market.model.User
 import com.scp.market.ui.charge.ChargeFragment
 import com.scp.market.ui.main.MainFragment
 import com.scp.market.ui.myroom.MyRoomFragment
@@ -68,6 +71,19 @@ class MainActivity : AppCompatActivity() {
                         "\n닉네임: ${user.kakaoAccount?.profile?.nickname}" +
                         "\n프로필사진: ${user.kakaoAccount?.profile?.thumbnailImageUrl}" +
                         "\n접근토근 : ${user.kakaoAccount?.phoneNumber}")
+
+
+                val database = Firebase.database.reference
+                database.child("user").child(user.id.toString()).setValue(
+                        User(
+                                user.id,
+                                user.kakaoAccount?.email,
+                                user.kakaoAccount?.profile?.nickname,
+                                user.kakaoAccount?.profile?.thumbnailImageUrl,
+                                user.kakaoAccount?.phoneNumber
+                        )
+                )
+
 
             }
         }

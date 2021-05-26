@@ -43,3 +43,4 @@
 
 # Model using by retrofit2.
 -keep class com.scp.market.model.** { *; }
+

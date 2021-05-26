@@ -85,6 +85,11 @@ class LoginActivity : AppCompatActivity() {
             else if (token != null) {
                 Log.i(TAG, "카카오톡 로그인 성공 ${token.accessToken}")
 
+                // 1. 여기서 카카오 로그인에 성공한다.
+                // 2. API서버로부터 사용자 정보를 가져온다.
+                // 3. 사용자 정보를 DB에 저장한다.
+                // 4. 저장을 완료하면 imweb접근토큰을 얻어온다.
+
                 loginViewModel.getAccessToken(
                     AccessTokenRequest(
                        getString(R.string.imweb_API_Key),
