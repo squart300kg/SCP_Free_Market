@@ -2,7 +2,6 @@ package com.scp.market.ui.register
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.Application
 import android.content.ContentUris
 import android.content.Context
 import android.content.Intent
@@ -34,7 +33,6 @@ import com.scp.market.databinding.FragmentRegisterBinding
 import com.scp.market.model.Category
 import com.scp.market.model.registerProduct.request.RegisterProductRequest
 import com.scp.market.state.NetworkState
-import com.scp.market.ui.MainActivity
 import com.scp.market.ui.custom.CameraGalleryBottomDialog
 import com.scp.market.ui.custom.CameraGalleryBottomDialog.Companion.ACTION_REQUEST_GALLERY
 import com.scp.market.ui.custom.CameraGalleryBottomDialog.Companion.ACTION_REQUEST_IMAGE_CROP
@@ -154,31 +152,33 @@ class RegisterFragment : Fragment() {
 
         // TODO deprecated된 요소 변경할 것
         var cursor: Cursor? = null
-        var fileUriList = ArrayList<String>()
-        var fileUri: String? = null
+        var resultUriList = ArrayList<String>()
+        var resultUri: String? = null
+        var imageId: Long? = null
 
         for ( contentURI in contentURIList ) {
 
-            val proj = arrayOf(MediaStore.Images.Media.DATA)
+            val proj = arrayOf(MediaStore.Images.Media._ID)
             cursor = activity?.contentResolver?.query(contentURI!!, proj, null, null, null)
-            val columnIndex = cursor?.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+            val columnIndex = cursor?.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
             cursor?.moveToFirst()
 
             if (columnIndex != null) {
-                fileUri = cursor?.getString(columnIndex)
-                Log.i("getRealPathFromURI", fileUri.toString())
-                if (fileUri == null) {
+                imageId = cursor?.getLong(columnIndex)
+                resultUri = Uri.withAppendedPath(contentURI, "" + imageId).toString()
+                Log.i("getRealPathFromURI", resultUri.toString())
+                if (resultUri == null) {
                     Toast.makeText(activity, "유효하지 않은 이미지가 선택되었습니다.", Toast.LENGTH_SHORT).show()
                     return null
                 }
             } else {
                 Log.i("columIndex is numm", "null")
             }
-            fileUriList.add(fileUri.toString())
+            resultUriList.add(resultUri.toString())
         }
 
-        Log.i("getRealPathFromURI", fileUriList.toString())
-        return fileUriList
+        Log.i("getRealPathFromURI", resultUriList.toString())
+        return resultUriList
     }
 
 
@@ -207,7 +207,7 @@ class RegisterFragment : Fragment() {
             val timeStamp = SimpleDateFormat("HHmmss", Locale.ROOT).format(Date())
             val imagesRef = storageRef.child("${category}/${timeStamp}_${file.lastPathSegment}")
 
-            val uploadTask = imagesRef.putFile(file)
+            val uploadTask = imagesRef.putFile(fileURI.toUri())
             uploadTask.addOnFailureListener {
 
                 Toast.makeText(activity, "이미지를 서버에 업로드하는데 실패했습니다.", Toast.LENGTH_LONG).show()
