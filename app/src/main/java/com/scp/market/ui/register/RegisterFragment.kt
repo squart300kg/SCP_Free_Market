@@ -307,7 +307,7 @@ class RegisterFragment : Fragment() {
                                         binding.edt03.text.toString(), // 상품 상세설명
                                         binding.edt05.text.toString().toDouble(), // 할인가격
                                         binding.edt04.text.toString().toDouble(), // 원래가격
-                                        binding.edt09.toString() // 공급지
+                                        binding.edt09.text.toString() // 공급지
                                 )
                         )
 

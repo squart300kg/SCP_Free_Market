@@ -39,7 +39,7 @@
                 <!-- Redirect URI: "kakao{NATIVE_APP_KEY}://oauth" -->
                 <data
                     android:host="oauth"
-                    android:scheme="kakao{4f0dcb1a86bff41ba89b365f27c2e130}" />
+                    android:scheme="kakao{5bdefe59ab1fd149066e8f006b54c243}" />
             </intent-filter>
         </activity>
         <!-- 사진 촬영을 위한 provider -->
