@@ -57,7 +57,7 @@ class RegisterFragment : Fragment() {
     private var category_code: String? = null
     private var category_name: String? = null
 
-    private val imageURIList = arrayListOf<Uri>()
+    private var imageURIList = arrayListOf<Uri>()
     private val imageDownloadURLList = arrayListOf<String>()
 
     private var isCameraMode = false
@@ -158,14 +158,13 @@ class RegisterFragment : Fragment() {
 
         for ( contentURI in contentURIList ) {
 
-            val proj = arrayOf(MediaStore.Images.Media._ID)
+            val proj = arrayOf(MediaStore.Images.Media.DATA)
             cursor = activity?.contentResolver?.query(contentURI!!, proj, null, null, null)
-            val columnIndex = cursor?.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
+            val columnIndex = cursor?.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
             cursor?.moveToFirst()
 
             if (columnIndex != null) {
-                imageId = cursor?.getLong(columnIndex)
-                resultUri = Uri.withAppendedPath(contentURI, "" + imageId).toString()
+                resultUri = cursor?.getString(columnIndex)
                 Log.i("getRealPathFromURI", resultUri.toString())
                 if (resultUri == null) {
                     Toast.makeText(activity, "유효하지 않은 이미지가 선택되었습니다.", Toast.LENGTH_SHORT).show()
@@ -184,7 +183,7 @@ class RegisterFragment : Fragment() {
 
 
     private fun uploadImageToFireStoreForGallery(category: String, fileURIList: List<String>?) {
-
+        Log.i("uploadLog", "gallery")
         // TODO 안드로이드 10 저장소 관련 대응할 것. 것
         //  매니페스트 android:requestLegacyExternalStorage="true"지울 것
 //        var file = Uri.fromFile(File(fileURIList))
@@ -207,7 +206,7 @@ class RegisterFragment : Fragment() {
             val timeStamp = SimpleDateFormat("HHmmss", Locale.ROOT).format(Date())
             val imagesRef = storageRef.child("${category}/${timeStamp}_${file.lastPathSegment}")
 
-            val uploadTask = imagesRef.putFile(fileURI.toUri())
+            val uploadTask = imagesRef.putFile(file)
             uploadTask.addOnFailureListener {
 
                 Toast.makeText(activity, "이미지를 서버에 업로드하는데 실패했습니다.", Toast.LENGTH_LONG).show()
@@ -259,6 +258,7 @@ class RegisterFragment : Fragment() {
 
     private fun uploadImageToFireStoreForCamera(category: String, fileUrl: String) {
 
+        Log.i("uploadLog", "camera")
         // TODO 안드로이드 10 저장소 관련 대응할 것. 것
         //  매니페스트 android:requestLegacyExternalStorage="true"지울 것
 
@@ -279,6 +279,7 @@ class RegisterFragment : Fragment() {
 
                 Toast.makeText(activity, "이미지를 서버에 업로드하는데 실패했습니다.", Toast.LENGTH_LONG).show()
                 dismissProgressBar()
+                imageURIList.clear()
 
             }
 
@@ -303,7 +304,7 @@ class RegisterFragment : Fragment() {
                                         listOf(category_code), // 상품 카테고리
                                         imageDownloadURLList, // 상품 썸네일
                                         binding.edt02.text.toString(), // 상품 이름
-                                        "근육이 무럭무럭 심플콘텐츠 - 하드코딩", // 상품 간단 설명
+                                        "simple_contents", // 상품 간단 설명
                                         binding.edt03.text.toString(), // 상품 상세설명
                                         binding.edt05.text.toString().toDouble(), // 할인가격
                                         binding.edt04.text.toString().toDouble(), // 원래가격
@@ -494,11 +495,16 @@ class RegisterFragment : Fragment() {
 
                     blankToInputField()
 
+                    imageURIList.clear()
+                    imageDownloadURLList.clear()
+                    Log.i("imageURIListLog", imageURIList.toString())
+
                 }
                 NetworkState.FAILED -> {
 
-                    Toast.makeText(activity, "상품 등록에 실패하였씁니다.", Toast.LENGTH_LONG).show()
+                    Toast.makeText(activity, "상품 등록에 실패하였습니다.", Toast.LENGTH_LONG).show()
                     dismissProgressBar()
+                    imageURIList.clear()
 
                 }
             }
