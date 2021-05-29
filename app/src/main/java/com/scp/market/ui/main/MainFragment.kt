@@ -3,6 +3,7 @@ package com.scp.market.ui.main
 import android.annotation.SuppressLint
 import android.graphics.Paint
 import android.os.Bundle
+import android.util.Base64
 import android.util.Log
 import android.view.*
 import android.widget.Toast

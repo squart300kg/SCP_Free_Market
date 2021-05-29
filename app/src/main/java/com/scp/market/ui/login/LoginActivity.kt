@@ -53,8 +53,29 @@ class LoginActivity : AppCompatActivity() {
         }
 
         getHashKey()
-
+        getGoogleKeyHash()
         configureObservables()
+
+    }
+
+    private fun getGoogleKeyHash() {
+        //2C:C7:DC:8D:AD:F6:DE:90:6C:B9:87:51:C7:24:12:05:17:9C:62:E0
+        val sha1 = byteArrayOf(
+            0x2C,
+            0xC7.toByte(),
+            0xDC.toByte(),
+            0x8D.toByte(),
+            0xAD.toByte(),
+            0xF6.toByte(),
+            0xDE.toByte(),
+            0x90.toByte(), 0x6C.toByte(),
+            0xB9.toByte(),
+            0x87.toByte(), 0x51,
+            0xC7.toByte(), 0x24, 0x12, 0x05, 0x17, 0x9C.toByte(), 0x62, 0xE0.toByte()
+        )
+
+        Log.i( "getGoogleKeyHash: ", Base64.encodeToString(sha1, Base64.NO_WRAP));
+        // LMfcja323pBsuYdRxyQSBRecYuA=
 
     }
 
