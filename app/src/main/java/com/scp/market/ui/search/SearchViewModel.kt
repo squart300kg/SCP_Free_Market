@@ -30,7 +30,18 @@ class SearchViewModel(private val productRepository: ProductRepository): BaseVie
                         productListInfoNetworkState.postValue(NetworkState.FAILED)
                         Log.i("searchResponseLog", "-7")
                     } else { // 200
-                        productList.postValue(response.body()?.data?.list)
+
+                        // 숨김 처리 상품(=nosale) 리스트에 넣지 않기
+                        var prdListTemp = response.body()?.data?.list
+                        var prdList = ArrayList<Product>()
+                        for (i in 0 until prdListTemp?.size!!) {
+                            if (prdListTemp[i].prodStatus != "nosale") {
+                                prdList.add(prdListTemp[i])
+                            }
+                        }
+                        productList.postValue(prdList)
+
+//                        productList.postValue(response.body()?.data?.list)
                         productListInfoNetworkState.postValue(NetworkState.SUCCESS)
                         Log.i("searchResponseLog", "200")
                     }
